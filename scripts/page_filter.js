@@ -1,8 +1,7 @@
-// TODO: Move all of this to page_filter.js as an ES6 module
 // TODO: fetch from some sort of CDN server
 // >cdn maybe overkill? We can just store this in a separate JSON
 // and serve it ourselves. Load it with a fetch request.
-const NEWS_SOURCE_WHITELIST = [
+export const NEWS_SOURCE_WHITELIST = [
     "https://edition.cnn.com",
     "https://www.nytimes.com",
     "https://www.bbc.com/news",
@@ -280,7 +279,7 @@ const NEWS_SOURCE_WHITELIST = [
  * @param {string} url URL of the page
  * @returns True if the URL is in the news source whitelist
  */
-function isURLNewsSource(url) {
+export function isURLNewsSource(url) {
     return NEWS_SOURCE_WHITELIST.some(newsSource => url.startsWith(newsSource));
 }
 
@@ -289,74 +288,6 @@ function isURLNewsSource(url) {
  * @param {string} html HTML content of the page
  * @returns True if the HTML contains an article tag
  */
-function isHTMLArticle(html) {
+export function isHTMLArticle(html) {
     return html.includes("<article>") || html.includes("\"article:tag\"");
 }
-
-async function setTimeoutAsync(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-// const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
-const API_URL = "http://localhost:8000";
-
-/**
- * Fact check an article from the page HTML.
- * @param {string} html HTML of the article to be fact-checked
- * @returns {Promise<{label: string, excerpt: string, reason: string, sources: string[]}[]>}
- * Returns a promise that resolves to an array of fact-check results.
- */
-async function fetchHTMLFactCheck(html) {
-    const checkReq = await fetch(`${API_URL}/api/article/extract-and-fact-check`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ article_html: html }),
-    });
-
-    if (checkReq.status !== 200) {
-        console.error('Error:', checkReq.statusText);
-        return;
-    }
-
-    return checkReq.json();
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.query !== "getCurrentTabHtml") return;
-
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        if (!tabs[0]) {
-            sendResponse({ error: "No active tab" });
-            return;
-        }
-
-        if (!isURLNewsSource(tabs[0].url)) {
-            sendResponse({ error: "URL not in whitelist" });
-            return;
-        }
-
-        await setTimeoutAsync(1000);
-
-        try {
-            const htmlReq = await fetch(tabs[0].url);
-            const html = await htmlReq.text();
-
-            // TODO: Remove this to do CNN or something. Here to not check
-            // root pages for now.
-            if (!isHTMLArticle(html)) {
-                sendResponse({ error: "HTML is not an article" });
-                return;
-            }
-
-            const checks = await fetchHTMLFactCheck(html);
-
-            sendResponse({ html: html, url: tabs[0].url, checks: checks });
-        } catch (error) {
-            sendResponse({ error: error.message });
-        }
-    });
-    return true;
-});
-
