@@ -1,38 +1,54 @@
 {
-    "name": "Litmus News",
-    "version": "1.0",
-    "description": "Connecting The Dots...",
-    "permissions": ["scripting", "tabs", "activeTab"],
-    "host_permissions": ["<all_urls>"],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["contentScript.js"],
-        "run_at": "document_start"
-      }
-    ],
-    "web_accessible_resources": [
-      {
-        "resources": [
+  "name": "Litmus News",
+  "version": "1.0",
+  "description": "Connecting The Dots",
+  "permissions": [
+    "scripting",
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "./scripts/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "./scripts/content_script.js"
+      ],
+      "css": [
+        "./scripts/tw.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
         "assets/bookmark.png",
         "assets/play.png",
         "assets/delete.png",
         "assets/save.png"
-        ],
-        "matches": ["<all_urls>"]
-      }
-    ],
-    "action": {
-      "default_icon": {
-        "16": "assets/ext-icon.png",
-        "24": "assets/ext-icon.png",
-        "32": "assets/ext-icon.png"
-      },
-      "default_title": "Litmus News",
-      "default_popup": "popup.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/ext-icon.png",
+      "24": "assets/ext-icon.png",
+      "32": "assets/ext-icon.png"
     },
-    "manifest_version": 3
+    "default_title": "Litmus News",
+    "default_popup": "./popup/popup.html"
+  },
+  "manifest_version": 3
 }
