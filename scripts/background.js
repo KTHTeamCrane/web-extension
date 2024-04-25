@@ -273,6 +273,7 @@ const NEWS_SOURCE_WHITELIST = [
     "https://www.fivethirtyeight.com",
     "https://www.quartz.com",
     "https://www.vice.com",
+    "https://www.theonion.com"
 ];
 
 /**
@@ -297,8 +298,8 @@ async function setTimeoutAsync(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
-// const API_URL = "http://localhost:8000";
+// const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
+const API_URL = "http://localhost:8000";
 
 /**
  * Fact check an article from the page HTML.
