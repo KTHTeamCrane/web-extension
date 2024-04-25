@@ -297,8 +297,8 @@ async function setTimeoutAsync(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
-// const API_URL = "http://localhost:8000";
+// const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
+const API_URL = "http://localhost:8000";
 
 /**
  * Fact check an article from the page HTML.
@@ -323,10 +323,21 @@ async function fetchHTMLFactCheck(html) {
     return checkReq.json();
 }
 
+let testChecks = [
+    {
+        LABEL: "False",
+        EXCERPT: "His announcement came hours after a Madrid court opened a preliminary investigation into Gómez’s business affairs, following a complaint made by a pressure group whose leader has links to the far right and which frequently brings legal action against those it accuses of acting against Spain’s democratic interests.",
+        REASON: "former presidents are not entitled to absolute immunity.",
+        SOURCES: ["bbc.com", "cnn.com"]
+    }
+]
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("received msg")
     if (request.query !== "getCurrentTabHtml") return;
 
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        
         if (!tabs[0]) {
             sendResponse({ error: "No active tab" });
             return;
@@ -350,13 +361,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 return;
             }
 
-            const checks = await fetchHTMLFactCheck(html);
+            // const checks = await fetchHTMLFactCheck(html);
 
-            sendResponse({ html: html, url: tabs[0].url, checks: checks });
+            sendResponse({ html: html, url: tabs[0].url, checks: testChecks });
         } catch (error) {
             sendResponse({ error: error.message });
         }
     });
     return true;
 });
-

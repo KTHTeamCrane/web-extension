@@ -5,6 +5,7 @@
  */
 function highlightFactChecks(checks) {
     for (const check of checks) {
+        console.log(check)
         // just a default color in case the label is not recognized
         let highlightColor = "#ccc";
 
@@ -20,11 +21,11 @@ function highlightFactChecks(checks) {
                 break;
         }
 
-        highlightText(check.EXCERPT, highlightColor);
+        highlightText(check, highlightColor);
     }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () => {``
     chrome.runtime.sendMessage({ query: "getCurrentTabHtml" }, async (msgResponse) => {
         if (!msgResponse) {
             console.error('Error: No response received');
@@ -42,7 +43,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
-function highlightText(targetText, color) {
+function highlightText(check, color) {
+    const targetText = check.EXCERPT
+
     const recursivelyHighlightText = (node) => {
         if (node.nodeType === Node.TEXT_NODE) {
             const textContent = node.textContent;
@@ -50,39 +53,23 @@ function highlightText(targetText, color) {
             if (matchIndex >= 0) {
                 const beforeMatch = document.createTextNode(textContent.substring(0, matchIndex));
                 const matchText = document.createElement('span');
-                const divHighlightWrapper = document.createElement("div");
-                const divTooltipContainer = document.createElement("div")
-                const divTooltipBackground = document.createElement("div")
-                const divTooltipHeader = document.createElement("div")
-                const divHighlightedText = document.createElement("div")
+                const container = document.createElement("div");
+                container.classList.add("ltms-container")
 
-                divHighlightWrapper.classList.add("inline")
-                divHighlightWrapper.classList.add("relative")
-                divHighlightWrapper.classList.add("cursor-pointer")
-                divHighlightWrapper.id = "highlight-wrapper"
 
-                divTooltipContainer.classList.add("absolute")
-                divTooltipContainer.classList.add("bottom-100")
-                divTooltipContainer.classList.add("left-0")
-                divTooltipContainer.classList.add("w-full")
-                divTooltipContainer.classList.add("grid")
-                divTooltipContainer.classList.add("place-content-center")
+                const highlightedText = document.createElement("div")
+                highlightedText.classList.add("ltms-highlighted-text")
+                highlightedText.style.backgroundColor = color
 
-                divTooltipBackground.classList.add("rounded-md")
-                divTooltipBackground.classList.add("w-400")
-                divTooltipBackground.classList.add("tooltip-shadow")
-                divTooltipBackground.classList.add("bg-white")
-
-                divTooltipBackground.innerHTML = "tooltip"
-
-                divHighlightedText.style.backgroundColor = color
-                divHighlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
+                
+                highlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
                 const afterMatch = document.createTextNode(textContent.substring(matchIndex + targetText.length));
 
-                divTooltipContainer.appendChild(divTooltipBackground)
-                divHighlightWrapper.appendChild(divHighlightedText)
-                divHighlightWrapper.appendChild(divTooltipContainer)
-                matchText.appendChild(divHighlightWrapper)
+                container.appendChild(highlightedText)
+
+                addTooltip(container, check)
+
+                matchText.appendChild(container)
 
 
                 const parent = node.parentNode;
@@ -105,7 +92,49 @@ function highlightText(targetText, color) {
     recursivelyHighlightText(document.body);
 }
 
-function addTooltip(spanTag) {
-    let divTooltipWrapper = document.createElement("div")
-    divTooltipWrapper.classList.add([""])
+/**
+ * Adds a tooltip around a div tag that activate on mouse enter of divTag
+ * @param divTag 
+ */
+function addTooltip(divTag, data) {
+    const tooltipWrapper = document.createElement("div")
+    tooltipWrapper.id = "ltms-tt-wrapper"
+
+    const tooltipBg = document.createElement("div")
+    
+    const tooltipHeader = document.createElement("div")
+    tooltipHeader.innerHTML = "LitmusNews"
+    
+    const tooltipReason = document.createElement("div")
+    tooltipReason.innerHTML = "We identified this claim to be false because " + data.REASON
+
+    const tooltipSourcesLabel = document.createElement("div")
+    tooltipSourcesLabel.innerHTML = "Sources"
+
+    const tooltipSourcesList = document.createElement("div")
+
+    data.SOURCES.forEach((each_source) => {
+        const sourceDiv = document.createElement("div")
+        sourceDiv.innerHTML = each_source
+        sourceDiv.classList.add("ltms-tt-src_item")
+        tooltipSourcesList.appendChild(sourceDiv)
+    })
+    
+
+    // Add CSS classes
+    tooltipWrapper.classList.add("ltms-tt-wrapper")
+    tooltipBg.classList.add("ltms-tt-bg")
+    tooltipHeader.classList.add("ltms-tt-header")
+    tooltipReason.classList.add("ltm-tt-reason")
+    tooltipSourcesLabel.classList.add("ltm-tt-src_lbl")
+    tooltipSourcesList.classList.add("ltm-tt-src_list")
+
+    // Append all children
+    tooltipBg.appendChild(tooltipHeader)
+    tooltipBg.appendChild(tooltipReason)
+    tooltipBg.appendChild(tooltipSourcesLabel)
+    tooltipBg.appendChild(tooltipSourcesList)
+
+    tooltipWrapper.appendChild(tooltipBg)
+    divTag.appendChild(tooltipWrapper)
 }
