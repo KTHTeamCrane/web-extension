@@ -1,6 +1,6 @@
 /**
  * Highlights the text of the fact checks in the page
- * @param {{label: string, excerpt: string, reason: string, sources: string[]}[]} checks
+ * @param {{LABEL: string, EXCERPT: string, REASON: string, SOURCES: string[]}[]} checks
  * List of fact checks
  */
 function highlightFactChecks(checks) {
@@ -8,19 +8,19 @@ function highlightFactChecks(checks) {
         // just a default color in case the label is not recognized
         let highlightColor = "#ccc";
 
-        switch (check.label) {
-            case "TRUE":
+        switch (check.LABEL) {
+            case "True":
                 highlightColor = "#92d4b7";
                 break;
-            case "FALSE":
+            case "False":
                 highlightColor = "#D66853";
                 break;
-            case "PARTIAL":
+            case "Partially true":
                 highlightColor = "#F09D51";
                 break;
         }
 
-        highlightText(check.excerpt, highlightColor);
+        highlightText(check.EXCERPT, highlightColor);
     }
 }
 
