@@ -1,16 +1,17 @@
 {
     "name": "Litmus News",
     "version": "1.0",
-    "description": "Connecting The Dots...",
+    "description": "Connecting The Dots",
     "permissions": ["scripting", "tabs", "activeTab"],
     "host_permissions": ["<all_urls>"],
     "background": {
-      "service_worker": "background.js"
+      "service_worker": "./scripts/background.js"
     },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "js": ["contentScript.js"],
+        "js": ["./scripts/content_script.js"],
+        "css": ["./scripts/tw.css"],
         "run_at": "document_start"
       }
     ],
@@ -32,7 +33,7 @@
         "32": "assets/ext-icon.png"
       },
       "default_title": "Litmus News",
-      "default_popup": "popup.html"
+      "default_popup": "./popup/popup.html"
     },
     "manifest_version": 3
 }

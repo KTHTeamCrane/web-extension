@@ -1,0 +1,55 @@
+.bg-gray-200 {
+    background-color: #f1f13f;
+}
+
+.inline {
+    display: inline;
+}
+
+.relative {
+    position: relative;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.left-0 {
+    left: 0px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.grid {
+    display: grid;
+}
+
+.place-content-center {
+    place-content: center;
+}
+
+.bottom-100 {
+    bottom: 100%;
+}
+
+.rounded-md {
+    border-radius: 0.375rem;
+}
+
+.tooltip-shadow {
+    box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.15);
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.w-400 {
+
+}
