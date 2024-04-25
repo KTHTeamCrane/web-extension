@@ -273,19 +273,19 @@ const newsSources = [
 
 const checks = [
   {
-    "excerpt": "The weapon is space-based and armed with a nuclear weapon to target satellites, the BBC's US partner CBS News reported.",
+    "excerpt": "Israel’s war on Gaza live: Mass graves show evidence of torture, executions",
     "label": "TRUE",
     "reason": "lol1",
     "sources": ["a"]
   },
   {
-    "excerpt": "before being acquired by BHP.",
+    "excerpt": "US needs to ‘step up’ and pressure Israel to allow independent investigation of mass graves",
     "label": "FALSE",
     "reason": "While exercise is beneficial, it cannot cure all health problems on its own.",
     "sources": ["https://www.who.int/news-room/fact-sheets/detail/physical-activity"]
   },
   {
-    "excerpt": "water to the health center where",
+    "excerpt": "Palestinian Civil Defence member Mohammed al-Moghier says his team is ready to prepare an evidential report for an independent investigation into the mass graves discovered at Gaza’s Nasser Hospital.",
     "label": "PARTIAL",
     "reason": "Exercise can contribute to a longer lifespan, but it is also influenced by other factors such as diet and genetics.",
     "sources": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3939523/"]
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             highlightText(check.excerpt, "#00FF00"); 
           }
           else if (check.label === "FALSE") {
-            highlightText(check.excerpt, "#00FF00"); 
+            highlightText(check.excerpt, "#abdefd"); 
           }
           else if (check.label === "PARTIAL") {
             highlightText(check.excerpt, "orange"); 
