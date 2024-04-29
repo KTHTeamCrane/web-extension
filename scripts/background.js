@@ -297,8 +297,7 @@ async function setTimeoutAsync(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
-const API_URL = "http://localhost:8000";
+const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
 
 /**
  * Fact check an article from the page HTML.
@@ -337,7 +336,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.query !== "getCurrentTabHtml") return;
 
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        
+
         if (!tabs[0]) {
             sendResponse({ error: "No active tab" });
             return;
@@ -356,14 +355,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             // TODO: Remove this to do CNN or something. Here to not check
             // root pages for now.
-            if (!isHTMLArticle(html)) {
-                sendResponse({ error: "HTML is not an article" });
-                return;
-            }
+            // if (!isHTMLArticle(html)) {
+            //     sendResponse({ error: "HTML is not an article" });
+            //     return;
+            // }
 
-            // const checks = await fetchHTMLFactCheck(html);
-
-            sendResponse({ html: html, url: tabs[0].url, checks: testChecks });
+            const checks = await fetchHTMLFactCheck(html);
+            sendResponse({ html, url: tabs[0].url, checks });
         } catch (error) {
             sendResponse({ error: error.message });
         }
