@@ -8,7 +8,7 @@ const highlighter = new TextHighlighter(document.body, {
     useDefaultEvents: false,
     version: "independencia"
 })
-import css from "./highlight.css"
+import css from "./services/css/highlight.css"
 
 
 
@@ -33,8 +33,13 @@ function sendMessageToBackground() {
         }
 
         highlightText([{
-            label: "TRUE",
-            excerpt: "Golden Dawn rose to prominence during Greece’s near decade-long debt crisis"
+            LABEL: "TRUE",
+            EXCERPT: "Golden Dawn rose to prominence during Greece’s near decade-long debt crisis",
+            REASON: "some reason",
+            SOURCES: [
+                "BBC",
+                "CNN"
+            ]
         }])
     })
 }

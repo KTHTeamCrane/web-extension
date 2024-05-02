@@ -1,4 +1,5 @@
 import tippy from "tippy.js"
+import { addTooltip } from "./tooltip"
 
 
 export function unit() {
@@ -20,22 +21,11 @@ export function addHighlight(parent, targetText, label) {
     parent.appendChild(div)
 
 }
-/**
- * Adds a tooltip over a provided element.
- * 
- */
-export function addTooltip(node, content) {
-    tippy(node, {
-        content: content
-    })
-
-}
-
 
 
 export function applyPageHighlights(check, color) {
 
-    const targetText = check.excerpt
+    const targetText = check.EXCERPT
     console.log(targetText)
 
     const recursivelyHighlightText = (node) => {
@@ -63,7 +53,7 @@ export function applyPageHighlights(check, color) {
                 tippy("#ltms-match-test", {
                     "content": "Hello World"
                 })  
-                addTooltip(container, "ezpz")
+                addTooltip(container, check)
 
                 matchText.appendChild(container)
 
