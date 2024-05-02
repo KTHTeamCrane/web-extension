@@ -23,7 +23,7 @@
         "./scripts/content_script.js"
       ],
       "css": [
-        "./scripts/tw.css"
+        "./scripts/css/tw.css"
       ],
       "run_at": "document_start"
     }
