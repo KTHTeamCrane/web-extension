@@ -8,7 +8,7 @@
     background-color: #dad;
 }
 
-.ltms-highlighted-text:hover + .ltms-tt-wrapper {
+.ltms-highlighted-text:hover+.ltms-tt-wrapper {
     opacity: 1;
 }
 
@@ -23,6 +23,8 @@
     transition-duration: 150ms;
     width: 100%;
     place-content: center;
+    min-width: 10vw;
+    pointer-events: none;
 }
 
 .ltms-tt-bg {
@@ -53,6 +55,7 @@
     font-weight: 600;
     padding: 5px 16px 0 16px;
 }
+
 .ltm-tt-src_list {
     padding-bottom: 6px;
 }
