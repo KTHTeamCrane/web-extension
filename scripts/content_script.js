@@ -25,7 +25,7 @@ function highlightFactChecks(checks) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {``
+document.addEventListener("DOMContentLoaded", async () => {
     chrome.runtime.sendMessage({ query: "getCurrentTabHtml" }, async (msgResponse) => {
         if (!msgResponse) {
             console.error('Error: No response received');
@@ -61,7 +61,7 @@ function highlightText(check, color) {
                 highlightedText.classList.add("ltms-highlighted-text")
                 highlightedText.style.backgroundColor = color
 
-                
+
                 highlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
                 const afterMatch = document.createTextNode(textContent.substring(matchIndex + targetText.length));
 
@@ -101,12 +101,12 @@ function addTooltip(divTag, data) {
     tooltipWrapper.id = "ltms-tt-wrapper"
 
     const tooltipBg = document.createElement("div")
-    
+
     const tooltipHeader = document.createElement("div")
     tooltipHeader.innerHTML = "LitmusNews"
-    
+
     const tooltipReason = document.createElement("div")
-    tooltipReason.innerHTML = "We identified this claim to be false because " + data.REASON
+    tooltipReason.innerHTML = data.EXPLANATION
 
     const tooltipSourcesLabel = document.createElement("div")
     tooltipSourcesLabel.innerHTML = "Sources"
@@ -119,7 +119,7 @@ function addTooltip(divTag, data) {
         sourceDiv.classList.add("ltms-tt-src_item")
         tooltipSourcesList.appendChild(sourceDiv)
     })
-    
+
 
     // Add CSS classes
     tooltipWrapper.classList.add("ltms-tt-wrapper")
