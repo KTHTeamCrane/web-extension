@@ -7,7 +7,6 @@ const highlighter = new TextHighlighter(document.body, {
     version: "independencia"
 })
 import css from "./utils/css/highlight.css"
-import { RetrievalAPI } from './services/mockServer';
 
 /**
  * Sends a message to `background.js` and waits for the reply.

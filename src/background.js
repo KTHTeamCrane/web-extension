@@ -1,4 +1,5 @@
-import { loadWhitelist, isURLNewsSource, setTimeoutAsync, fetchHTMLFactCheck } from "./utils/util";
+import { gatewayAPI } from "./utils/gateway";
+import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
 
 
 let testChecks = [
@@ -51,7 +52,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const htmlReq = await fetch(tabs[0].url);
             const html = await htmlReq.text(); 
 
-            const checks = await fetchHTMLFactCheck(html);
+            const checks = await gatewayAPI.fetchHTMLFactCheck(html);
             // const checks = testChecks;
             sendResponse({ html, url: tabs[0].url, checks });
         } catch (error) {

@@ -4,42 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="popup.css">
-    <title>Litmus News</title>
+    <title>Extension Popup</title>
+    <link rel="stylesheet" href="./popup.css">
 </head>
 
 <body>
-    <div class="popup-container">
-        <div class="popup-header">
-            <img src="finalLogo.png" alt="Litmus News Logo">
+    <div class="logo-container">
+        <img class="logo" src="./logo.webp" alt="Logo for LitmusNews">
+    </div>
+    <div class="toggle-container">
+        <div class="toggle-label">
+            <div class="toggle-label-title">
+                Auto-detect articles
+            </div>
+            <div class="toggle-label-subtitle">
+                When enabled, the extension runs automatically when it detects
+                that you have opened an article.
+            </div>
         </div>
-        <div class="content">
-            <div class="toggle-container">
-                <div class="toggle-button toggle-label-up" id="toggleButtonUp">
-                    Auto-detection
-                    <div class="slider"></div>
-                </div>
-                <div class="toggle-button toggle-label-down" id="toggleButtonDown">
-                    Enable highlighter
-                    <div class="slider"></div>
-                </div>
-            </div>
-            <div class="icon-bar">
-                <div class="icon-button-container globe-icon">
-                    <a href="https://chat.openai.com/">
-                        <button class="icon-button"><img src="globe-icon.png" alt="Global"></button>
-                    </a>
-                </div>
-                <div class="icon-button-container power-icon">
-                    <button class="icon-button"><img src="power-icon.png" alt="Power"></button>
-                </div>
-                <div class="icon-button-container question-mark-icon">
-                    <button class="icon-button"><img src="question-icon.png" alt="Help"></button>
-                </div>
-            </div>
+
+        <div class='toggle-switch-container'>
+            <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
         </div>
     </div>
-    <script src="popup.js"></script>
+
+    <div class="toggle-container">
+        <div class="toggle-label">
+            <div class="toggle-label-title">
+                Highlight mode
+            </div>
+            <div class="toggle-label-subtitle">
+                When enabled, you can press S on your keyboard to enter highlight mode.
+                You can fact-check individual sentences by simply highlighting them.
+            </div>
+        </div>
+
+        <div class='toggle-switch-container'>
+            <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    <script src="./popup.js"></script>
 </body>
 
 </html>

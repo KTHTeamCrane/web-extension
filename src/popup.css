@@ -1,315 +1,107 @@
-body,
-html {
+html,
+body {
     margin: 0;
     padding: 0;
-    width: 275px;
-    height: 275px;
-    font-family: Arial, sans-serif;
-    background: #8d8d8d;
-    color: white;
+    user-select: none;
 }
 
-.popup-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+body {
+    padding: 1.4rem;
+    border-radius: 0.5rem;
+    color: #001e2a;
+    background: #e7ffff;
+    width: 250px;
 }
 
-.popup-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: #424242;
-    border-bottom: 1px solid #ffffff;
+.logo-container {
+    width: 100%;
+    display: grid;
+    place-content: center;
 }
 
-.popup-header img {
-    max-height: 100%;
-    max-width: 100%;
+.logo {
+    width: 170px;
+    padding-bottom: 1rem;
 }
+
+
 
 .toggle-container {
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px 0px 20px;
-    margin-bottom: 5px;
-}
-
-.toggle-button {
-    position: relative;
-    width: 100%;
-    margin: 2px 0;
-    cursor: pointer;
-    font-size: 16px;
-    user-select: none;
-    background-color: #424242;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
 }
 
-.toggle-label-up {
-    margin-top: 10px;
-    border-radius: 12px 12px 0 0;
+.toggle-label {
+    margin-right: 0.5rem;
 }
 
-.toggle-label-down {
-    border-radius: 0 0 12px 12px;
+.toggle-label-title {
+    padding-top: 0.75rem;
+    padding-bottom: 0.2rem;
+    font-size: 0.9rem;
+    line-height: 1rem;
 }
 
-.slider {
-    height: 24px;
-    width: 48px;
-    background-color: #ccc;
-    border-radius: 50px;
+.toggle-label-subtitle {
+    font-size: 0.65rem;
+    line-height: 1.2;
+}
+
+.toggle-switch-container {
+    padding-bottom: 0.5rem;
+}
+
+/* The switch - the box around the slider *//* The switch - the box around the slider */
+.switch {
+    font-size: 9px;
     position: relative;
-    transition: background-color 0.4s;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #9fccfa;
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .slider:before {
-    content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
-    left: 2px;
-    bottom: 2px;
+    content: "";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2em;
+    width: 2em;
+    inset: 0;
     background-color: white;
-    border-radius: 50%;
-    transition: transform 0.4s, background-color 0.4s;
+    border-radius: 50px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.slider.active {
-    background-color: #92b6f0;
+.switch input:checked+.slider {
+    background: #3d91f1;
 }
 
-.slider.active:before {
-    transform: translateX(24px);
+.switch input:focus+.slider {
+    box-shadow: 0 0 1px #0974f1;
 }
 
-.icon-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    padding: 11.5px 0;
-    gap: 4px;
-    margin-top: 0px;
-    margin-bottom: 11px;
-}
-
-.icon-button-container {
-    flex-shrink: 0;
-    width: 74.5px;
-    display: flex;
-    justify-content: center;
-    background: #424242;
-}
-
-@keyframes click-animation {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-.icon-button {
-    height: 40px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-
-    body,
-    html {
-        margin: 0;
-        padding: 0;
-        width: 275px;
-        height: 275px;
-        font-family: Arial, sans-serif;
-        background: #4d4d4d;
-        color: white;
-    }
-
-    .popup-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .popup-header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        background: #3c3c3c;
-        border-bottom: 1px solid #ffffff;
-    }
-
-    .popup-header img {
-        max-height: 100%;
-        max-width: 100%;
-    }
-
-    .content {
-        padding: 10px 20px;
-    }
-
-    .toggle-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 10px 20px;
-        margin-bottom: 5px;
-        /* Reduce margin between toggle container and icon bar */
-    }
-
-    .toggle-button {
-        width: 100%;
-        margin: 3px 0;
-        cursor: pointer;
-        font-size: 16px;
-        user-select: none;
-        background-color: #6e6e6e;
-        padding: 12px 20px;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .toggle-label-up {
-        margin-top: 10px;
-        border-radius: 12px 12px 0 0;
-    }
-
-    .toggle-label-down {
-        border-radius: 0 0 12px 12px;
-    }
-
-    .slider {
-        height: 24px;
-        width: 48px;
-        background-color: #ccc;
-        border-radius: 50px;
-        position: relative;
-        transition: background-color 0.4s;
-    }
-
-    .slider:before {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        left: 2px;
-        bottom: 2px;
-        background-color: white;
-        border-radius: 50%;
-        transition: transform 0.4s, background-color 0.4s;
-    }
-
-    .slider.active {
-        background-color: #92b6f0;
-    }
-
-    .slider.active:before {
-        transform: translateX(24px);
-    }
-
-    .icon-bar {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: transparent;
-        gap: 4px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .icon-button-container {
-        flex-shrink: 0;
-        width: 74.5px;
-        display: flex;
-        justify-content: center;
-        background: #6e6e6e;
-    }
-
-    .icon-button {
-        height: 40px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-
-    .icon-button img {
-        height: 25px;
-        width: 25px;
-    }
-
-    .icon-button.animate {
-        animation: click-animation 0.4s ease;
-    }
-
-    .globe-icon {
-        border-radius: 12px 0px 0px 12px;
-    }
-
-    .question-mark-icon {
-        border-radius: 0px 12px 12px 0px;
-    }
-
-    @keyframes click-animation {
-        0% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.1);
-        }
-
-        100% {
-            transform: scale(1);
-        }
-    }
-
-    transition: transform 0.2s ease;
-}
-
-.icon-button img {
-    height: 25px;
-    width: 25px;
-}
-
-.icon-button.animate {
-    animation: click-animation 0.4s ease;
-}
-
-.globe-icon {
-    border-radius: 12px 0px 0px 12px;
-}
-
-.question-mark-icon {
-    border-radius: 0px 12px 12px 0px;
+.switch input:checked+.slider:before {
+    transform: translateX(1.6em);
 }
