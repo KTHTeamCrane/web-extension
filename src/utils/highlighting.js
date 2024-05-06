@@ -56,7 +56,9 @@ export function highlightCheck(check) {
 }
 
 /**
+ * Takes in a list of "fact-checked" `claims` and applies highlighting to all the claims.
  * 
+ * Highlighting works only if the provided claim exists within a single HTML element.
  * @param {{LABEL: string, EXCERPT: string, EXPLANATION: string, SOURCES: string[]}[]} claims 
  */
 export function applyPageHighlights(claims) {

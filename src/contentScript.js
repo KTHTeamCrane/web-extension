@@ -1,12 +1,13 @@
 'use strict';
 
 import TextHighlighter from '@perlego/text-highlighter';
-const { applyPageHighlights } = require("./utils/highlighting");
+const { applyPageHighlights, highlightCheck } = require("./utils/highlighting");
 const highlighter = new TextHighlighter(document.body, {
     useDefaultEvents: false,
     version: "independencia"
 })
 import css from "./utils/css/highlight.css"
+import { RetrievalAPI } from './services/mockServer';
 
 /**
  * Sends a message to `background.js` and waits for the reply.
@@ -42,3 +43,11 @@ if (document.readyState !== 'loading') {
         sendMessageToBackground()
     });
 }
+
+// document.onmouseup = () => {
+//     let selectedText = document.getSelection().toString()
+//     let api = new RetrievalAPI() 
+
+//     let check = api.fetchSingleClaimCheck(selectedText)
+//     highlightCheck(check)
+// }

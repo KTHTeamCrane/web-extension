@@ -25,7 +25,7 @@ export async function fetchHTMLFactCheck(html) {
     });
 
     if (checkReq.status !== 200) {
-        console.error('Error:', checkReq.statusText);
+        console.log('Error:', checkReq.status);
         return;
     }
 

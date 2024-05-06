@@ -7,7 +7,7 @@ export function addTooltip(parent, data) {
     header.innerHTML = "LitmusNews"
     
     const reason = document.createElement("div")
-    reason.innerHTML = "We identified this claim to be false because " + data.EXPLANATION
+    reason.innerHTML = data.EXPLANATION
 
     const sourceLabel = document.createElement("div")
     sourceLabel.innerHTML = "Sources"
