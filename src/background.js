@@ -5,7 +5,7 @@ let testChecks = [
     {
         LABEL: "False",
         EXCERPT: "Relatives of the three men identified their bodies on Sunday after travelling to Mexico to assist authorities, a state prosecutor said.",
-        REASON: "because you suck",
+        EXPLANATION: "because you suck",
         SOURCES: ["bbc.com", "cnn.com"]
     }
 ]
