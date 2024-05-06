@@ -1,15 +1,19 @@
-.ltms-highlight-true {
-    background-color: aquamarine;
-}
-
 .ltms-container {
     display: inline;
     position: relative;
 }
 
 
-.ltms-highlighted-text {
-    background-color: #dad;
+.ltms-highlighted-true {
+    background-color: rgb(120, 250, 206);
+}
+
+.ltms-highlighted-false {
+    background-color: rgb(255, 138, 138);
+}
+
+.ltms-highlighted-partial {
+    background-color: rgb(255, 203, 80);
 }
 
 .ltms-highlighted-text:hover + .ltms-tt-wrapper {

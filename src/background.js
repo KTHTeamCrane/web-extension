@@ -1,67 +1,11 @@
-const WHITELIST_URL = "https://raw.githubusercontent.com/KTHTeamCrane/.github/json/whitelist.json"
-const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
+import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
 
-let newsSourceWhitelist; 
-
-/**
- * Loads the whitelist from Github.
- */
-async function loadWhitelist() {
-    let fetchResult = await fetch(WHITELIST_URL)
-    newsSourceWhitelist = await fetchResult.json()
-    newsSourceWhitelist = newsSourceWhitelist.whitelist
-}
-
-/**
- * 
- * @param {string} url URL of the page
- * @returns True if the URL is in the news source whitelist
- */
-function isURLNewsSource(url) {
-    return newsSourceWhitelist.some(newsSource => url.startsWith(newsSource));
-}
-
-/**
- * 
- * @param {string} html HTML content of the page
- * @returns True if the HTML contains an article tag
- */
-function isHTMLArticle(html) {
-    return html.includes("<article>") || html.includes("\"article:tag\"");
-}
-
-async function setTimeoutAsync(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-
-/**
- * Fact check an article from the page HTML.
- * @param {string} html HTML of the article to be fact-checked
- * @returns {Promise<{label: string, excerpt: string, reason: string, sources: string[]}[]>}
- * Returns a promise that resolves to an array of fact-check results.
- */
-async function fetchHTMLFactCheck(html) {
-    const checkReq = await fetch(`${API_URL}/api/article/extract-and-fact-check`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ article_html: html }),
-    });
-
-    if (checkReq.status !== 200) {
-        console.error('Error:', checkReq.statusText);
-        return;
-    }
-
-    return checkReq.json();
-}
 
 let testChecks = [
     {
         LABEL: "False",
-        EXCERPT: "For students of this prestigious school in Manhattan, how long is unclear.",
+        EXCERPT: "Relatives of the three men identified their bodies on Sunday after travelling to Mexico to assist authorities, a state prosecutor said.",
+        REASON: "because you suck",
         SOURCES: ["bbc.com", "cnn.com"]
     }
 ]
@@ -76,8 +20,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({ error: "No active tab" });
             return;
         }
-
-        console.log(newsSourceWhitelist)
 
         if (!isURLNewsSource(tabs[0].url)) {
             sendResponse({ error: "URL not in whitelist" });
