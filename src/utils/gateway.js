@@ -1,9 +1,12 @@
+import { setTimeoutAsync } from "./util";
+
 const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
 
 class GatewayAPI {
-    fetchSingleClaimCheck(claim) {
+    async fetchSingleClaimCheck(claim) {
+        await setTimeoutAsync(4000)
         return {
-            LABEL: "Pending",
+            LABEL: "True",
             EXCERPT: claim,
             EXPLANATION: "This reason was determined false because fuck you",
             SOURCES: [

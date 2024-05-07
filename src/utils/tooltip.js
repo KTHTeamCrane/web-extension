@@ -50,8 +50,7 @@ class Tooltip {
      * @param {HTMLElement} parent 
      * @param {{LABEL: 'pending', EXCERPT: string, EXPLANATION: string, SOURCES: string[]}} data 
      */
-    addPendingTooltip(parent, data) {
-        if (data.LABEL.toLowerCase() !== 'pending') return
+    addPendingTooltip(parent) {
         const bg = document.createElement("div")
         bg.classList.add("tippy-bg")
     

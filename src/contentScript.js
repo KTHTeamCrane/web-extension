@@ -65,6 +65,7 @@ document.onkeydown = () => {
 document.onmouseup = async () => {
     if (allowTextHighlight) {
         let selectedText = document.getSelection().toString()
+        highlighting.highlightSinglePendingCheck(selectedText)
         let factChecked = await gatewayAPI.fetchSingleClaimCheck(selectedText)
         highlighting.highlightSingleCheck(factChecked)
     }
