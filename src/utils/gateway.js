@@ -23,7 +23,7 @@ class GatewayAPI {
      * @param {string} html HTML of the article to be fact-checked
      * @returns {Promise<{label: string, excerpt: string, reason: string, sources: string[]}[]>}
      */
-    async fetchHTMLFactCheck(html) {
+    async fetchArticleClaimText(html) {
         const checkReq = await fetch(`${API_URL}/api/article/extract-and-fact-check`, {
             method: "POST",
             headers: {
