@@ -30,7 +30,6 @@ let testChecks = [
 ]
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("Received message from backend")
     if (request.query !== "getCurrentTabHtml") return;
 
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {

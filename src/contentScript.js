@@ -7,6 +7,21 @@ const highlighter = new TextHighlighter(document.body, {
     version: "independencia"
 })
 import css from "./utils/css/highlight.css"
+import { gatewayAPI } from './utils/gateway';
+
+/**
+ * Tracks if highlighting is enabled.
+ * 
+ * When highlighting is enabled, the user can select a text 
+ * and send it off for fact checking.
+ * 
+ * TODO: Make variable names more discrete
+ */
+let highlightingEnabled = false
+
+// TODO: Make variable names more discrete
+let allowTextHighlight = false
+
 
 /**
  * Sends a message to `background.js` and waits for the reply.
@@ -29,7 +44,7 @@ function sendMessageToBackground() {
         }
 
         // if (!msgResponse.checks) {
-            applyPageHighlights(msgResponse.checks)
+        applyPageHighlights(msgResponse.checks)
         // }
     })
 }
@@ -45,4 +60,25 @@ if (document.readyState !== 'loading') {
     });
 }
 
-const stateAutoDetect = localStorage.getItem("toggle-auto-detect")
+document.onkeydown = () => {
+    if (highlightingEnabled) {
+        if (allowTextHighlight) allowTextHighlight = false
+        else allowTextHighlight = true
+    }
+    console.log("Highlighting is allowed", allowTextHighlight)
+}
+
+document.onmouseup = async () => {
+    if (allowTextHighlight) {
+        let selectedText = document.getSelection().toString()
+        let factChecked = await gatewayAPI.fetchSingleClaimCheck(selectedText)
+        highlightCheck(factChecked)
+    }
+}
+
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        highlightingEnabled = request.highlightEnabled
+        console.log("Highlighting enabled from popup", highlightingEnabled)
+    }
+);

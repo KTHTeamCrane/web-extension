@@ -7,7 +7,6 @@ import { addTooltip } from "./tooltip";
  */
 export function highlightCheck(check) {
     const targetText = check.EXCERPT
-    console.log(targetText)
 
     const recursivelyHighlightText = (node) => {
         if (node.nodeType === Node.TEXT_NODE) {

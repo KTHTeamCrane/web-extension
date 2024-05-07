@@ -27,3 +27,7 @@ toggleAutoDetect.addEventListener("change", () => {
 toggleHighlight.addEventListener("change", () => {
     localStorage.setItem(KEY_HIGHLIGHT, toggleHighlight.checked.toString())
 })
+
+chrome.tabs.query({currentWindow: true, active: true}, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { highlightEnabled: toggleHighlight.checked.toString().toLowerCase() === 'true' })
+});
