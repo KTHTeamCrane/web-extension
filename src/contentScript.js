@@ -1,11 +1,5 @@
 'use strict';
-
-import TextHighlighter from '@perlego/text-highlighter';
-const { applyPageHighlights, highlightCheck } = require("./utils/highlighting");
-const highlighter = new TextHighlighter(document.body, {
-    useDefaultEvents: false,
-    version: "independencia"
-})
+const { applyPageHighlights, highlighting } = require("./utils/highlighting");
 import css from "./utils/css/highlight.css"
 import { gatewayAPI } from './utils/gateway';
 
@@ -72,7 +66,7 @@ document.onmouseup = async () => {
     if (allowTextHighlight) {
         let selectedText = document.getSelection().toString()
         let factChecked = await gatewayAPI.fetchSingleClaimCheck(selectedText)
-        highlightCheck(factChecked)
+        highlighting.highlightSingleCheck(factChecked)
     }
 }
 

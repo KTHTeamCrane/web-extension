@@ -3,7 +3,7 @@ const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
 class GatewayAPI {
     fetchSingleClaimCheck(claim) {
         return {
-            LABEL: "True",
+            LABEL: "Pending",
             EXCERPT: claim,
             EXPLANATION: "This reason was determined false because fuck you",
             SOURCES: [
