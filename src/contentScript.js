@@ -27,8 +27,10 @@ function sendMessageToBackground() {
             console.log('Error:', msgResponse.error)
             return
         }
-        
-        applyPageHighlights(msgResponse.checks)
+
+        // if (!msgResponse.checks) {
+            applyPageHighlights(msgResponse.checks)
+        // }
     })
 }
 
@@ -43,10 +45,4 @@ if (document.readyState !== 'loading') {
     });
 }
 
-// document.onmouseup = () => {
-//     let selectedText = document.getSelection().toString()
-//     let api = new RetrievalAPI() 
-
-//     let check = api.fetchSingleClaimCheck(selectedText)
-//     highlightCheck(check)
-// }
+const stateAutoDetect = localStorage.getItem("toggle-auto-detect")

@@ -52,8 +52,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const htmlReq = await fetch(tabs[0].url);
             const html = await htmlReq.text(); 
 
-            const checks = await gatewayAPI.fetchHTMLFactCheck(html);
-            // const checks = testChecks;
+            // const checks = await gatewayAPI.fetchHTMLFactCheck(html);
+            const checks = testChecks;
             sendResponse({ html, url: tabs[0].url, checks });
         } catch (error) {
             sendResponse({ error: error.message });
