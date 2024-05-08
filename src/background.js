@@ -1,4 +1,4 @@
-import { gatewayAPI } from "./utils/gateway";
+import { fetchArticleClaimText } from "./utils/gateway";
 import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
 
 
@@ -43,9 +43,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         try {
             const htmlReq = await fetch(tabs[0].url);
-            const html = await htmlReq.text(); 
-
-            // const checks = await gatewayAPI.fetchHTMLFactCheck(html);
+            const html = await htmlReq.text();
+            // const checks = await fetchArticleClaimText(
+            //     html, tabs[0].title, tabs[0].url
+            // );
             const checks = testChecks;
             sendResponse({ html, url: tabs[0].url, checks });
         } catch (error) {

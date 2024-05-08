@@ -1,7 +1,7 @@
 'use strict';
 const { applyPageHighlights, highlighting } = require("./utils/highlighting");
 import css from "./utils/css/highlight.css"
-import { gatewayAPI } from './utils/gateway';
+import { fetchSingleClaimCheck } from './utils/gateway';
 
 /**
  * Tracks if highlighting is enabled.
@@ -66,7 +66,7 @@ document.onmouseup = async () => {
     if (allowTextHighlight) {
         let selectedText = document.getSelection().toString()
         highlighting.highlightSinglePendingCheck(selectedText)
-        let factChecked = await gatewayAPI.fetchSingleClaimCheck(selectedText)
+        let factChecked = await fetchSingleClaimCheck(selectedText)
         highlighting.highlightSingleCheck(factChecked)
     }
 }
