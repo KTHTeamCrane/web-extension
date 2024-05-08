@@ -7,19 +7,23 @@ let testChecks = [
         LABEL: "Pending",
         EXCERPT: "Relatives of the three men identified their bodies on Sunday after travelling to Mexico to assist authorities, a state prosecutor said.",
         EXPLANATION: "because you suck",
-        SOURCES: ["bbc.com", "cnn.com"]
+        SOURCES: [{
+            type: "UNKNOWN",
+            source_idx: -1,
+            raw: "BBC",
+        }]
     },
     {
-        LABEL: "Partial",
+        LABEL: "PARTIALLY TRUE",
         EXCERPT: "Their bodies were found in a 4m (15ft) deep well about 6km (4 miles) from the site of the attack in the town of Santo Tomás on Friday.",
         EXPLANATION: "because you suck",
-        SOURCES: ["bbc.com", "cnn.com"]
+        SOURCES: []
     },
     {
-        LABEL: "False",
+        LABEL: "FALSE",
         EXCERPT: "Earlier, the FBI said it was looking into the case and was in touch with international partners.",
         EXPLANATION: "because you suck",
-        SOURCES: ["bbc.com", "cnn.com"]
+        SOURCES: []
     }
 ]
 
@@ -72,8 +76,8 @@ function handleFactCheckArticle(sendResponse) {
         let toggleState = await getToggleStateAutoDetect()
         if (toggleState.autoDetect == false) {
             console.log("Toggle State has been disabled")
-            sendResponse({ error: "Auto detect articles is disabled"})
-            return 
+            sendResponse({ error: "Auto detect articles is disabled" })
+            return
         }
 
         if (!tabs[0]) {

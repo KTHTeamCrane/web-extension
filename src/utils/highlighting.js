@@ -1,9 +1,37 @@
 import * as tooltip from "./tooltip";
 
 /**
+ * @param {"TRUE" | "PARTIALLY TRUE" | "FALSE"} label
+ * @returns {string}
+ */
+export function labelToClass(label) {
+    switch (label) {
+        case "TRUE":
+            return "ltms-highlighted-true";
+        case "PARTIALLY TRUE":
+            return "ltms-highlighted-partially-true";
+        case "FALSE":
+            return "ltms-highlighted-false";
+        case "Pending":
+            return "ltms-highlighted-pending";
+    }
+}
+
+/**
  * Takes a `check` object and searches the entire page to find the `excerpt`, then highlights 
  * then highlights that excerpt.
- * @param {{LABEL: string, EXCERPT: string, EXPLANATION: string, sources: string[]}} check 
+ * @param {{
+ *  LABEL: string,
+*  EXCERPT: string,
+*  EXPLANATION: string,
+*  SOURCES: {
+*      type: "ARTICLE" | "POLITIFACT" | "UNKNOWN",
+*      source_idx: number,
+*      raw: string
+*      source_title?: string,
+*      source_publisher?: string,
+*      url?: string}[]
+* }} check 
  */
 export function highlightCheck(check) {
     const targetText = check.EXCERPT
@@ -21,9 +49,9 @@ export function highlightCheck(check) {
 
 
                 const highlightedText = document.createElement("span")
-                highlightedText.classList.add(`ltms-highlighted-${check.LABEL.toLowerCase()}`)
+                highlightedText.classList.add(labelToClass(check.LABEL))
 
-                
+
                 highlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
                 const afterMatch = document.createTextNode(textContent.substring(matchIndex + targetText.length));
 
@@ -59,7 +87,18 @@ export function highlightCheck(check) {
  * Takes in a list of "fact-checked" `claims` and applies highlighting to all the claims.
  * 
  * Highlighting works only if the provided claim exists within a single HTML element.
- * @param {{LABEL: string, EXCERPT: string, EXPLANATION: string, SOURCES: string[]}[]} claims 
+ * @param {{
+ *  LABEL: string,
+*  EXCERPT: string,
+*  EXPLANATION: string,
+*  SOURCES: {
+*      type: "ARTICLE" | "POLITIFACT" | "UNKNOWN",
+*      source_idx: number,
+*      raw: string
+*      source_title?: string,
+*      source_publisher?: string,
+*      url?: string}[]
+* }[]} claims 
  */
 export function applyPageHighlights(claims) {
     claims.forEach((each_e) => {
@@ -80,20 +119,15 @@ export function highlightSinglePendingCheck(targetText) {
                 const container = document.createElement("span");
                 container.classList.add("ltms-container")
 
-
                 const highlightedText = document.createElement("span")
                 highlightedText.classList.add(`ltms-highlighted-pending`)
 
-                
                 highlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
                 const afterMatch = document.createTextNode(textContent.substring(matchIndex + targetText.length));
 
                 container.appendChild(highlightedText)
-                
                 tooltip.addPendingTooltip(container)
-
                 matchText.appendChild(container)
-
 
                 const parent = node.parentNode;
                 parent.insertBefore(beforeMatch, node);

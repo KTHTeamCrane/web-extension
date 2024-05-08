@@ -30,7 +30,7 @@ let highlightShortcutEnabled = false
  */
 function sendMessageToBackground() {
     chrome.runtime.sendMessage({ action: "fact-check-article" }, async (msgResponse) => {
-        if (msgResponse.error == undefined) highlighting.applyPageHighlights(msgResponse.checks)
+        if (!msgResponse.error) highlighting.applyPageHighlights(msgResponse.checks)
         else console.log(msgResponse.error)
     })
 }

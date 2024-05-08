@@ -1,5 +1,20 @@
 import tippy from "tippy.js"
 
+/**
+ * @param {HTMLElement} parent
+ * @param {{
+*  LABEL: string,
+*  EXCERPT: string,
+*  EXPLANATION: string,
+*  SOURCES: {
+*      type: "ARTICLE" | "POLITIFACT" | "UNKNOWN",
+*      source_idx: number,
+*      raw: string
+*      source_title?: string,
+*      source_publisher?: string,
+*      url?: string}[]
+* }} data 
+*/
 export function addTooltip(parent, data) {
     const bg = document.createElement("div")
     bg.classList.add("tippy-bg")
@@ -16,10 +31,19 @@ export function addTooltip(parent, data) {
     const sourceList = document.createElement("div")
 
     data.SOURCES.forEach((each_source) => {
-        const sourceDiv = document.createElement("div")
-        sourceDiv.innerHTML = each_source
-        sourceDiv.classList.add("ltms-tt-src_item")
-        sourceList.appendChild(sourceDiv)
+        let el;
+
+        if (each_source.type === "UNKNOWN") {
+            el = document.createElement("div")
+            el.innerHTML = each_source.raw
+        } else {
+            el = document.createElement("a")
+            el.innerHTML = each_source.source_publisher
+            el.href = each_source.url
+        }
+
+        el.classList.add("ltms-tt-src_item")
+        sourceList.appendChild(el)
     })
 
 
@@ -39,14 +63,27 @@ export function addTooltip(parent, data) {
     parent.appendChild(bg)
 
     tippy(parent, {
-        "content": bg
+        "content": bg,
+        interactive: true,
+        interactiveBorder: 30,
     })
 }
 
 /**
  * 
  * @param {HTMLElement} parent 
- * @param {{LABEL: 'pending', EXCERPT: string, EXPLANATION: string, SOURCES: string[]}} data 
+ * @param {{
+ *  LABEL: string,
+*  EXCERPT: string,
+*  EXPLANATION: string,
+*  SOURCES: {
+*      type: "ARTICLE" | "POLITIFACT" | "UNKNOWN",
+*      source_idx: number,
+*      raw: string
+*      source_title?: string,
+*      source_publisher?: string,
+*      url?: string}[]
+* }[]} data 
  */
 export function addPendingTooltip(parent) {
     const bg = document.createElement("div")
@@ -79,7 +116,9 @@ export function addPendingTooltip(parent) {
     parent.appendChild(bg)
 
     tippy(parent, {
-        "content": bg
+        content: bg,
+        interactive: true,
+        interactiveBorder: 30,
     })
 }
 
