@@ -89,13 +89,13 @@ function handleFactCheckArticle(sendResponse) {
         await setTimeoutAsync(1000);
 
         try {
-            const htmlReq = await fetch(tabs[0].url);
-            const html = await htmlReq.text();
-            // const checks = await fetchArticleClaimText(
+            const htmlReq = await fetch(tabs[0].url)
+            const html = await htmlReq.text()
+            // const checks = await gateway.fetchArticleClaimText(
             //     html, tabs[0].title, tabs[0].url
-            // );
+            // )
             const checks = testChecks;
-            sendResponse({ html, url: tabs[0].url, checks });
+            sendResponse({ html, url: tabs[0].url, checks })
         } catch (error) {
             sendResponse({ error: error.message });
         }
@@ -103,8 +103,18 @@ function handleFactCheckArticle(sendResponse) {
     return true;
 }
 
-function handleFactCheckSingleClaim() {
-
+function handleFactCheckSingleClaim(claim, sendResponse) {
+    console.log("Handle Fact Check", claim)
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        try {
+            // const checks = await gateway.fetchSingleClaimCheck(claim)
+            const checks = await gateway.testFetchSingleClaimCheck(claim)
+            sendResponse({ checks: checks })
+        } catch (error) {
+            sendResponse({ error: error.message })
+        }
+    });
+    return true;
 }
 
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -145,7 +155,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     else if (request.action === "set-auto-detect") handleStorageSetAutoDetect(request.value)
     else if (request.action === "set-highlight-enabled") handleStorageSetHighlightEnabled(request.value)
     else if (request.action === "fact-check-article") handleFactCheckArticle(sendResponse)
-    else if (request.action === "fact-check-single-claim") handleFactCheckSingleClaim()
+    else if (request.action === "fact-check-single-claim") handleFactCheckSingleClaim(request.value, sendResponse)
     return true
 })
 

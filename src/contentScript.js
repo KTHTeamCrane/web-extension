@@ -62,8 +62,14 @@ document.onmouseup = async () => {
     if (highlightShortcutEnabled) {
         let selectedText = document.getSelection().toString()
         highlighting.highlightSinglePendingCheck(selectedText)
-        let factChecked = await gatewayApi.fetchSingleClaimCheck(selectedText)
-        highlighting.highlightCheck(factChecked)
+        chrome.runtime.sendMessage({ action: "fact-check-single-claim", value: selectedText }, async (msgResponse) => {
+            if (msgResponse.error != undefined) {
+                console.log("Encountered error", msgResponse.error)
+                return
+            }
+            console.log(msgResponse.checks)
+            highlighting.highlightCheck(msgResponse.checks)
+        })
     }
 }
 
