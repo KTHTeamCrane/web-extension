@@ -2,32 +2,42 @@
 
 import css from "./popup.css"
 
-const KEY_AUTO_DETECT = "toggle-auto-detect"
-const KEY_HIGHLIGHT = "toggle-enable-highlight"
+// const KEY_AUTO_DETECT = "toggle-auto-detect"
+// const KEY_HIGHLIGHT = "toggle-enable-highlight"
 
-const toggleAutoDetect = document.getElementById(KEY_AUTO_DETECT)
-const toggleHighlight = document.getElementById(KEY_HIGHLIGHT)
+const toggleAutoDetect = document.getElementById("toggle-auto-detect")
+const toggleHighlight = document.getElementById("toggle-enable-highlight")
 
-const stateAutoDetect = localStorage.getItem(KEY_AUTO_DETECT)
-const stateHighlight = localStorage.getItem(KEY_HIGHLIGHT)
+// const stateAutoDetect = localStorage.getItem(KEY_AUTO_DETECT)
+// const stateHighlight = localStorage.getItem(KEY_HIGHLIGHT)
 
 
-if (stateAutoDetect !=  null) {
-    toggleAutoDetect.checked = stateAutoDetect.toLowerCase() === 'true'
-}
+// if (stateAutoDetect !=  null) {
+//     toggleAutoDetect.checked = stateAutoDetect.toLowerCase() === 'true'
+// }
 
-if (stateHighlight != null) {
-    toggleHighlight.checked = stateHighlight.toLowerCase() === 'true'
-}
+// if (stateHighlight != null) {
+//     toggleHighlight.checked = stateHighlight.toLowerCase() === 'true'
+// }
+
+chrome.runtime.sendMessage( { action: "get-items" }, async (msgResponse) => {
+    console.log("Received message from background", msgResponse)
+    toggleAutoDetect.checked = msgResponse.stateAutoDetect
+    toggleHighlight.checked = msgResponse.stateHighlightEnabled
+})
+
+// chrome.runtime.sendMessage({ action: "fact-check-article"}, async (msgResponse) => {
+//     if (msgResponse.error) return
+// })
 
 toggleAutoDetect.addEventListener("change", () => {
-    localStorage.setItem(KEY_AUTO_DETECT, toggleAutoDetect.checked.toString())
+    chrome.runtime.sendMessage({ action: "set-auto-detect", value: toggleAutoDetect.checked})
 })
 
 toggleHighlight.addEventListener("change", () => {
-    localStorage.setItem(KEY_HIGHLIGHT, toggleHighlight.checked.toString())
+    chrome.runtime.sendMessage({ action: "set-highlight-enabled", value: toggleHighlight.checked})
 })
 
-chrome.tabs.query({currentWindow: true, active: true}, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { highlightEnabled: toggleHighlight.checked.toString().toLowerCase() === 'true' })
-});
+// chrome.tabs.query({currentWindow: true, active: true}, (tabs) => {
+//     chrome.tabs.sendMessage(tabs[0].id, { highlightEnabled: toggleHighlight.checked.toString().toLowerCase() === 'true' })
+// });
