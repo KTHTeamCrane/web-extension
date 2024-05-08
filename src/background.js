@@ -1,4 +1,4 @@
-import { fetchArticleClaimText } from "./utils/gateway";
+import * as gateway from "./utils/gateway";
 import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
 
 
@@ -32,8 +32,8 @@ function initialiseStorage() {
     chrome.storage.local.get(["autoDetect"]).then((v) => {
         if (v.autoDetect == undefined) {
             console.log("Keys were not initialised")
-            chrome.storage.local.set({autoDetect: true}).then(() => {
-                chrome.storage.local.set({highlightEnabled: true})
+            chrome.storage.local.set({ autoDetect: true }).then(() => {
+                chrome.storage.local.set({ highlightEnabled: true })
             })
         } else console.log("Keys were indeed initialised")
     })
@@ -52,9 +52,13 @@ function handleStorageGetItems(sendResponse) {
     })
 }
 
+function getToggleStateAutoDetect() {
+    return chrome.storage.local.get("autoDetect")
+}
+
 function handleStorageSetAutoDetect(nv) {
     console.log("handleStorageSetAutoDetect")
-    chrome.storage.local.set({ autoDetect: nv})
+    chrome.storage.local.set({ autoDetect: nv })
 }
 
 function handleStorageSetHighlightEnabled(nv) {
@@ -62,12 +66,45 @@ function handleStorageSetHighlightEnabled(nv) {
     chrome.storage.local.set({ highlightEnabled: nv })
 }
 
-function handleFactCheckArticle() {
+function handleFactCheckArticle(sendResponse) {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        await loadWhitelist()
+        let toggleState = await getToggleStateAutoDetect()
+        if (toggleState.autoDetect == false) {
+            console.log("Toggle State has been disabled")
+            sendResponse({ error: "Auto detect articles is disabled"})
+            return 
+        }
 
+        if (!tabs[0]) {
+            sendResponse({ error: "No active tab" });
+            return;
+        }
+
+        if (!isURLNewsSource(tabs[0].url)) {
+            sendResponse({ error: "URL not in whitelist" });
+            return;
+        }
+
+        await setTimeoutAsync(1000);
+
+        try {
+            const htmlReq = await fetch(tabs[0].url);
+            const html = await htmlReq.text();
+            // const checks = await fetchArticleClaimText(
+            //     html, tabs[0].title, tabs[0].url
+            // );
+            const checks = testChecks;
+            sendResponse({ html, url: tabs[0].url, checks });
+        } catch (error) {
+            sendResponse({ error: error.message });
+        }
+    });
+    return true;
 }
 
 function handleFactCheckSingleClaim() {
-    
+
 }
 
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -106,10 +143,11 @@ function handleFactCheckSingleClaim() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "get-items") handleStorageGetItems(sendResponse)
     else if (request.action === "set-auto-detect") handleStorageSetAutoDetect(request.value)
-    else if (request.action === "set-highlight-enabled") handleStorageSetHighlightEnabled(request.value) 
-    else if (request.action === "fact-check-article") handleFactCheckArticle()
+    else if (request.action === "set-highlight-enabled") handleStorageSetHighlightEnabled(request.value)
+    else if (request.action === "fact-check-article") handleFactCheckArticle(sendResponse)
     else if (request.action === "fact-check-single-claim") handleFactCheckSingleClaim()
     return true
 })
+
 
 initialiseStorage()

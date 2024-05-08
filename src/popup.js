@@ -26,10 +26,6 @@ chrome.runtime.sendMessage( { action: "get-items" }, async (msgResponse) => {
     toggleHighlight.checked = msgResponse.stateHighlightEnabled
 })
 
-// chrome.runtime.sendMessage({ action: "fact-check-article"}, async (msgResponse) => {
-//     if (msgResponse.error) return
-// })
-
 toggleAutoDetect.addEventListener("change", () => {
     chrome.runtime.sendMessage({ action: "set-auto-detect", value: toggleAutoDetect.checked})
 })

@@ -1,20 +1,23 @@
 'use strict';
-const { applyPageHighlights, highlighting } = require("./utils/highlighting");
-import css from "./utils/css/highlight.css"
-import { fetchSingleClaimCheck } from './utils/gateway';
+// const { applyPageHighlights  = require("./utils/highlighting");
+import * as highlighting from "./utils/highlighting"
+import css from "./utils/css/tooltip.css"
+import * as gatewayApi from './utils/gateway';
+
 
 /**
  * Tracks if highlighting is enabled.
  * 
  * When highlighting is enabled, the user can select a text 
  * and send it off for fact checking.
- * 
- * TODO: Make variable names more discrete
  */
-let highlightingEnabled = false
+let highlightToggleEnabled = false
 
-// TODO: Make variable names more discrete
-let allowTextHighlight = false
+/**
+ * Checks if the user has pressed the `S` key. This will allow user to highlight texts
+ * to fact check claims.
+ */
+let highlightShortcutEnabled = false
 
 
 /**
@@ -26,20 +29,9 @@ let allowTextHighlight = false
  * 
  */
 function sendMessageToBackground() {
-    chrome.runtime.sendMessage({ query: "getCurrentTabHtml" }, async (msgResponse) => {
-        if (!msgResponse) {
-            console.log('Error: No response received')
-            return
-        }
-
-        if (!msgResponse.html) {
-            console.log('Error:', msgResponse.error)
-            return
-        }
-
-        // if (!msgResponse.checks) {
-        applyPageHighlights(msgResponse.checks)
-        // }
+    chrome.runtime.sendMessage({ action: "fact-check-article" }, async (msgResponse) => {
+        if (msgResponse.error == undefined) highlighting.applyPageHighlights(msgResponse.checks)
+        else console.log(msgResponse.error)
     })
 }
 
@@ -55,25 +47,29 @@ if (document.readyState !== 'loading') {
 }
 
 document.onkeydown = () => {
-    if (highlightingEnabled) {
-        if (allowTextHighlight) allowTextHighlight = false
-        else allowTextHighlight = true
-    }
-    console.log("Highlighting is allowed", allowTextHighlight)
+    console.log("Sending message to background script to get items")
+    chrome.runtime.sendMessage({ action: "get-items" }, (msgResponse) => {
+        console.log(msgResponse)
+        if (msgResponse.stateHighlightEnabled) {
+            if (highlightShortcutEnabled) highlightShortcutEnabled = false
+            else highlightShortcutEnabled = true
+        }
+        console.log("Highlighting enabled: ", highlightShortcutEnabled)
+    })
 }
 
 document.onmouseup = async () => {
-    if (allowTextHighlight) {
+    if (highlightShortcutEnabled) {
         let selectedText = document.getSelection().toString()
         highlighting.highlightSinglePendingCheck(selectedText)
-        let factChecked = await fetchSingleClaimCheck(selectedText)
-        highlighting.highlightSingleCheck(factChecked)
+        let factChecked = await gatewayApi.fetchSingleClaimCheck(selectedText)
+        highlighting.highlightCheck(factChecked)
     }
 }
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        highlightingEnabled = request.highlightEnabled
-        console.log("Highlighting enabled from popup", highlightingEnabled)
+        highlightToggleEnabled = request.highlightEnabled
+        console.log("Highlighting enabled from popup", highlightToggleEnabled)
     }
 );
