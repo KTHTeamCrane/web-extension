@@ -107,6 +107,8 @@ export function highlightCheck(check) {
         finalEl.appendChild(spanBefore)
         finalEl.appendChild(spanMatching)
         finalEl.appendChild(spanAfter)
+
+        tooltip.addTooltip(spanMatching, check)
     }
 }
 
