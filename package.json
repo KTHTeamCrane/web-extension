@@ -24,6 +24,7 @@
   "dependencies": {
     "@perlego/text-highlighter": "^2.1.0-alpha.4",
     "tippy.js": "^6.3.7",
+    "toastify-js": "^1.12.0",
     "web-highlighter": "^0.7.4"
   }
 }

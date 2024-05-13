@@ -3,8 +3,54 @@
 import * as highlighting from "./utils/highlighting"
 import css from "./utils/css/tooltip.css"
 import * as gatewayApi from './utils/gateway';
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 
+const processingToast = Toastify({
+    text: "We've detected an article and are detecting if the article makes truthful claims",
+    position: "right",
+    gravity: "bottom",
+    style: {
+        background: "white",
+        color: "black",
+        borderRadius: "6px",
+        fontSize: "14px",
+        lineHeight: "1.3",
+        maxWidth: "30vw"
+    },
+    duration: 10000
+})
+
+const finishedProcessingToast = Toastify({
+    text: "We've completed fact-checking the article, highlighting key points. Hover over these sections for explanations on our markings.",
+    position: "right",
+    gravity: "bottom",
+    style: {
+        background: "white",
+        color: "black",
+        borderRadius: "6px",
+        fontSize: "14px",
+        lineHeight: "1.3",
+        maxWidth: "30vw"
+    },
+    duration: 3000
+})
+
+const errorToast = Toastify({
+    text: "We've completed fact-checking the article, highlighting key points. Hover over these sections for explanations on our markings.",
+    position: "right",
+    gravity: "bottom",
+    style: {
+        background: "white",
+        color: "black",
+        borderRadius: "6px",
+        fontSize: "14px",
+        lineHeight: "1.3",
+        maxWidth: "30vw"
+    },
+    duration: 3000
+})
 /**
  * Tracks if highlighting is enabled.
  * 
@@ -30,8 +76,13 @@ let highlightShortcutEnabled = false
  */
 function sendMessageToBackground() {
     chrome.runtime.sendMessage({ action: "fact-check-article" }, async (msgResponse) => {
-        if (!msgResponse.error) highlighting.applyPageHighlights(msgResponse.checks)
+        processingToast.showToast()
+        if (!msgResponse.error) {
+            highlighting.applyPageHighlights(msgResponse.checks)
+        }
         else console.log(msgResponse.error)
+        processingToast.hideToast()
+        finishedProcessingToast.showToast()
     })
 }
 
