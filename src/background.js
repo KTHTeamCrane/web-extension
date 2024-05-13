@@ -4,18 +4,19 @@ import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
 
 let testChecks = [
     {
-        LABEL: "Pending",
-        EXCERPT: "Relatives of the three men identified their bodies on Sunday after travelling to Mexico to assist authorities, a state prosecutor said.",
+        LABEL: "FALSE",
+        EXCERPT: "The regional governor said two bodies had been pulled from the rubble",
         EXPLANATION: "because you suck",
         SOURCES: [{
-            type: "UNKNOWN",
+            type: "ARTICLE",
             source_idx: -1,
-            raw: "BBC",
+            source_publisher: "BBC",
+            url: "https://google.com"
         }]
     },
     {
-        LABEL: "PARTIALLY TRUE",
-        EXCERPT: "Their bodies were found in a 4m (15ft) deep well about 6km (4 miles) from the site of the attack in the town of Santo Tomás on Friday.",
+        LABEL: "TRUE",
+        EXCERPT: "The Belgorod region has often been targeted by Ukrainian forces since the",
         EXPLANATION: "because you suck",
         SOURCES: []
     },

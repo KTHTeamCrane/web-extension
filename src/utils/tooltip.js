@@ -62,10 +62,14 @@ export function addTooltip(parent, data) {
 
     parent.appendChild(bg)
 
+    function onTippyMount(instance) {
+        document.getElementById(`tippy-${instance.id}`).classList.add("inline")
+    }
+
     tippy(parent, {
-        "content": bg,
+        content: bg,
         interactive: true,
-        interactiveBorder: 30,
+        onMount: onTippyMount
     })
 }
 
@@ -117,8 +121,7 @@ export function addPendingTooltip(parent) {
 
     tippy(parent, {
         content: bg,
-        interactive: true,
-        interactiveBorder: 30,
+        interactive: true
     })
 }
 
