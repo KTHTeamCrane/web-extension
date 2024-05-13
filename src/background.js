@@ -5,7 +5,7 @@ import * as storage from "./storage"
 
 let testChecks = [
     {
-        LABEL: "FALSE",
+        LABEL: "Pending",
         EXCERPT: "Eurovision “is first and foremost",
         EXPLANATION: "because you suck",
         SOURCES: [{
@@ -23,7 +23,7 @@ let testChecks = [
     },
     {
         LABEL: "PARTIALLY TRUE",
-        EXCERPT: "The veteran Belgian MEP Guy Verhofstadt contrasted the ban with the protests in Georgia unfolding at the same time, when thousands took to the streets on Saturday night,",
+        EXCERPT: "The flag furore is the latest controversy to hit this year’s competition in Malmӧ,",
         EXPLANATION: "because you suck",
         SOURCES: []
     }

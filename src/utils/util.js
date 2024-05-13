@@ -62,3 +62,10 @@ export function isURLNewsSource(url) {
 export async function setTimeoutAsync(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function convertClaimToCheckObject(claim) {
+    return {
+        LABEL: "Pending",
+        EXCERPT: claim,
+    }
+}
