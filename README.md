@@ -1,21 +1,19 @@
-# <img src="public/icons/icon_48.png" width="45" align="left"> Extension
+# Le Chrome Extension
 
-My Chrome Extension
+The Chrome extension acts as the primary method of usage for the end-user. 
 
-## Features
+# Feature support
+## Automatic article detection
+The extension supports automatic article detection, running scans every time it detects the user has visited an article.
 
-- Feature 1
-- Feature 2
+## Intuitive feedback
+The extension offers intuitive feedback on claims that the article makes. The extension provides feedback for each claim and a list of sources for the reader to further verify on their own.
 
-## Install
+# Building
+To build the extension yourself, simply run
+```bash
+npm install
+npm run build
+```
 
-[**Chrome** extension]() <!-- TODO: Add chrome extension link inside parenthesis -->
-
-## Contribution
-
-Suggestions and pull requests are welcomed!.
-
----
-
-This project was bootstrapped with [Chrome Extension CLI](https://github.com/dutiyesh/chrome-extension-cli)
-
+This will create the extension in a `./build` directory with a `manifest.json` file. You can now load the extension from Chrome Extension by enabling Developer Mode.
