@@ -5,6 +5,7 @@ import css from "./utils/css/tooltip.css"
 import * as gatewayApi from './utils/gateway';
 import Toastify from 'toastify-js'
 import "toastify-js/src/toastify.css"
+import { convertClaimToCheckObject } from "./utils/util";
 
 
 const processingToast = Toastify({
@@ -112,7 +113,8 @@ document.onkeydown = () => {
 document.onmouseup = async () => {
     if (highlightShortcutEnabled) {
         let selectedText = document.getSelection().toString()
-        highlighting.highlightSinglePendingCheck(selectedText)
+        const pendingClaims = convertClaimToCheckObject(selectedText)
+        highlighting.highlightCheck(pendingClaims)
         chrome.runtime.sendMessage({ action: "fact-check-single-claim", value: selectedText }, async (msgResponse) => {
             if (msgResponse.error != undefined) {
                 console.log("Encountered error", msgResponse.error)

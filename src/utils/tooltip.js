@@ -34,6 +34,7 @@ export function labelToClass(label) {
 * }} data 
 */
 export function addTooltip(parent, data) {
+    console.log("Adding tooltip")
     const bg = document.createElement("div")
     bg.classList.add("tippy-bg")
 
@@ -87,8 +88,7 @@ export function addTooltip(parent, data) {
 
     tippy(parent, {
         content: bg,
-        interactive: true,
-        onMount: onTippyMount
+        interactive: true
     })
 }
 
