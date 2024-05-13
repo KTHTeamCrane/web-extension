@@ -1,5 +1,6 @@
 import * as gateway from "./utils/gateway";
 import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
+import * as storage from "./storage"
 
 
 let testChecks = [
@@ -36,11 +37,11 @@ let testChecks = [
 function initialiseStorage() {
     chrome.storage.local.get(["autoDetect"]).then((v) => {
         if (v.autoDetect == undefined) {
-            console.log("Keys were not initialised")
+            console.log("Keys were not initialised");
             chrome.storage.local.set({ autoDetect: true }).then(() => {
-                chrome.storage.local.set({ highlightEnabled: true })
+                chrome.storage.local.set({ highlightEnabled: true });
             })
-        } else console.log("Keys were indeed initialised")
+        } else console.log("Keys were indeed initialised");
     })
 }
 
@@ -48,37 +49,36 @@ function handleStorageGetItems(sendResponse) {
     console.log("handleStorageGetItems")
     chrome.storage.local.get("autoDetect").then((v1) => {
         chrome.storage.local.get("highlightEnabled").then((v2) => {
-            console.log("states from background", v1.autoDetect, v2.highlightEnabled)
+            console.log("states from background", v1.autoDetect, v2.highlightEnabled);
             sendResponse({
                 stateAutoDetect: v1.autoDetect,
                 stateHighlightEnabled: v2.highlightEnabled
-            })
+            });
         })
     })
 }
 
 function getToggleStateAutoDetect() {
-    return chrome.storage.local.get("autoDetect")
+    return chrome.storage.local.get("autoDetect");
 }
 
 function handleStorageSetAutoDetect(nv) {
-    console.log("handleStorageSetAutoDetect")
-    chrome.storage.local.set({ autoDetect: nv })
+    console.log("handleStorageSetAutoDetect");
+    chrome.storage.local.set({ autoDetect: nv });
 }
 
 function handleStorageSetHighlightEnabled(nv) {
-    console.log("handleStorageSetHighlightEnabled")
-    chrome.storage.local.set({ highlightEnabled: nv })
+    console.log("handleStorageSetHighlightEnabled");
+    chrome.storage.local.set({ highlightEnabled: nv });
 }
+
 
 function handleFactCheckArticle(sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        await loadWhitelist()
-        let toggleState = await getToggleStateAutoDetect()
+        let toggleState = await storage.getStateAutoDetect();
         if (toggleState.autoDetect == false) {
-            console.log("Toggle State has been disabled")
-            sendResponse({ error: "Auto detect articles is disabled" })
-            return
+            sendResponse({ error: "Auto detect articles is disabled" });
+            return;
         }
 
         if (!tabs[0]) {
@@ -86,21 +86,31 @@ function handleFactCheckArticle(sendResponse) {
             return;
         }
 
+        await loadWhitelist();
         if (!isURLNewsSource(tabs[0].url)) {
             sendResponse({ error: "URL not in whitelist" });
             return;
         }
 
+        let cacheCheck = await storage.returnCachedResult(tabs[0].url);
+        console.log("cacheCheck", cacheCheck)
+        if (cacheCheck.found === true) {
+            console.log("found");
+            sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult });
+            return;
+        }
+        
         await setTimeoutAsync(1000);
 
         try {
-            const htmlReq = await fetch(tabs[0].url)
-            const html = await htmlReq.text()
+            const htmlReq = await fetch(tabs[0].url);
+            const html = await htmlReq.text();
             // const checks = await gateway.fetchArticleClaimText(
             //     html, tabs[0].title, tabs[0].url
             // )
             const checks = testChecks;
-            sendResponse({ html, url: tabs[0].url, checks })
+            await storage.addToWebsiteCache(checks, tabs[0].url);
+            sendResponse({ html, url: tabs[0].url, checks });
         } catch (error) {
             sendResponse({ error: error.message });
         }
@@ -112,7 +122,6 @@ function handleFactCheckSingleClaim(claim, sendResponse) {
     console.log("Handle Fact Check", claim)
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         try {
-            // const checks = await gateway.fetchSingleClaimCheck(claim)
             const checks = await gateway.testFetchSingleClaimCheck(claim)
             sendResponse({ checks: checks })
         } catch (error) {
@@ -121,39 +130,6 @@ function handleFactCheckSingleClaim(claim, sendResponse) {
     });
     return true;
 }
-
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//     if (request.query !== "getCurrentTabHtml") return;
-
-//     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-//         await loadWhitelist()
-
-//         if (!tabs[0]) {
-//             sendResponse({ error: "No active tab" });
-//             return;
-//         }
-
-//         if (!isURLNewsSource(tabs[0].url)) {
-//             sendResponse({ error: "URL not in whitelist" });
-//             return;
-//         }
-
-//         await setTimeoutAsync(1000);
-
-//         try {
-//             const htmlReq = await fetch(tabs[0].url);
-//             const html = await htmlReq.text();
-//             // const checks = await fetchArticleClaimText(
-//             //     html, tabs[0].title, tabs[0].url
-//             // );
-//             const checks = testChecks;
-//             sendResponse({ html, url: tabs[0].url, checks });
-//         } catch (error) {
-//             sendResponse({ error: error.message });
-//         }
-//     });
-//     return true;
-// });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "get-items") handleStorageGetItems(sendResponse)
@@ -165,4 +141,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 
-initialiseStorage()
+storage.initialiseStorage()
