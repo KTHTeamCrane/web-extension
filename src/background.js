@@ -6,7 +6,7 @@ import * as storage from "./storage"
 let testChecks = [
     {
         LABEL: "FALSE",
-        EXCERPT: "The regional governor said two bodies had been pulled from the rubble",
+        EXCERPT: "Eurovision “is first and foremost",
         EXPLANATION: "because you suck",
         SOURCES: [{
             type: "ARTICLE",
@@ -17,13 +17,13 @@ let testChecks = [
     },
     {
         LABEL: "TRUE",
-        EXCERPT: "The Belgorod region has often been targeted by Ukrainian forces since the",
+        EXCERPT: "Agada bagada tagada",
         EXPLANATION: "because you suck",
         SOURCES: []
     },
     {
         LABEL: "PARTIALLY TRUE",
-        EXCERPT: "Kyiv has cast doubt on that account, with one official sug",
+        EXCERPT: "The veteran Belgian MEP Guy Verhofstadt contrasted the ban with the protests in Georgia unfolding at the same time, when thousands took to the streets on Saturday night,",
         EXPLANATION: "because you suck",
         SOURCES: []
     }
@@ -92,13 +92,13 @@ function handleFactCheckArticle(sendResponse) {
             return;
         }
 
-        let cacheCheck = await storage.returnCachedResult(tabs[0].url);
-        console.log("cacheCheck", cacheCheck)
-        if (cacheCheck.found === true) {
-            console.log("found");
-            sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult });
-            return;
-        }
+        // let cacheCheck = await storage.returnCachedResult(tabs[0].url);
+        // console.log("cacheCheck", cacheCheck)
+        // if (cacheCheck.found === true) {
+        //     console.log("found");
+        //     sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult });
+        //     return;
+        // }
         
         await setTimeoutAsync(1000);
 

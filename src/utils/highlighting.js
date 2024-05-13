@@ -35,53 +35,109 @@ function labelToClass(label) {
 * }} check 
  */
 export function highlightCheck(check) {
-    const targetText = check.EXCERPT
+    // Get all elements in the webpage
+    const finalEl = getElementIncludingText(check.EXCERPT)
 
-    const recursivelyHighlightText = (node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            const textContent = node.textContent;
-            const matchIndex = textContent.indexOf(targetText);
-            if (matchIndex >= 0) {
-                const beforeMatch = document.createTextNode(textContent.substring(0, matchIndex));
-                const matchText = document.createElement('span');
-                matchText.id = "ltms-match-text"
-                const container = document.createElement("span");
-                container.classList.add("ltms-container")
+    if (finalEl == null) {
+        return
+    }
+
+    const textContent = finalEl.textContent
+    const matchIndex = textContent.indexOf(check.EXCERPT)
+    console.log(finalEl.innerText.includes(check.EXCERPT))
+
+    if (finalEl.children.length == 0) {
+        const beforeMatch = textContent.substring(0, matchIndex);
+        const matchText = textContent.substring(matchIndex, matchIndex + check.EXCERPT.length);
+        const afterMatch = textContent.substring(matchIndex + check.EXCERPT.length);
+        
+
+        const spanBefore = document.createElement("span")
+        const spanMatching = document.createElement("span")
+        const spanAfter = document.createElement("span")
+        
+        spanBefore.innerText = beforeMatch
+        
+        spanMatching.classList.add(labelToClass(check.LABEL))
+        spanMatching.innerText = matchText
+
+        spanAfter.innerText = afterMatch
+
+        finalEl.innerHTML = ""
+        finalEl.appendChild(spanBefore)
+        finalEl.appendChild(spanMatching)
+        finalEl.appendChild(spanAfter)
 
 
-                const highlightedText = document.createElement("span")
-                highlightedText.classList.add(labelToClass(check.LABEL))
+        tooltip.addTooltip(spanMatching, check)
+    } else {
+        const beforeMatch = textContent.substring(0, matchIndex);
+        const matchText = textContent.substring(matchIndex, matchIndex + check.EXCERPT.length);
+        const afterMatch = textContent.substring(matchIndex + check.EXCERPT.length);
+
+        const splitMatchText = matchText.split(finalEl.children[0].innerHTML)
+
+        if (splitMatchText.length < 2) {
+            // TODO: Do error handling
+        }
+
+        const preChildText = document.createElement("span")
+        const postChildText = document.createElement("span")
 
 
-                highlightedText.textContent = textContent.substring(matchIndex, matchIndex + targetText.length);
-                const afterMatch = document.createTextNode(textContent.substring(matchIndex + targetText.length));
+        preChildText.innerText = splitMatchText[0]
+        postChildText.innerText = splitMatchText[1]
+        
 
-                container.appendChild(highlightedText)
+        const spanBefore = document.createElement("span")
+        const spanMatching = document.createElement("span")
+        const spanAfter = document.createElement("span")
 
-                if (check.LABEL.toLowerCase() === "pending") tooltip.addPendingTooltip(container, check)
-                else tooltip.addTooltip(container, check)
+        spanMatching.classList.add(labelToClass(check.LABEL))
+        
+        spanBefore.innerText = beforeMatch
+        spanAfter.innerText = afterMatch  
+              
+        
+        spanMatching.appendChild(preChildText)
+        spanMatching.appendChild(finalEl.children[0])
+        spanMatching.appendChild(postChildText)
 
-                matchText.appendChild(container)
+        finalEl.innerHTML = ""
+        finalEl.appendChild(spanBefore)
+        finalEl.appendChild(spanMatching)
+        finalEl.appendChild(spanAfter)
+    }
+}
+
+/**
+ * This function highlights a given text within a provided HTMLElement, given that
+ * HTMLElement does not have any further children.
+ * 
+ * @param {} check Check object in the format from the gateway API.
+ * @param {HTMLElement} finalEl The HTMLElement which contains the text that needs to be highlighted.  
+ */
+function highlightWithoutChildren(finalEl, check) {
+
+}
+
+function highlightWithBabies() {
+
+}
 
 
-                const parent = node.parentNode;
-                parent.insertBefore(beforeMatch, node);
-                parent.insertBefore(matchText, node);
-                parent.insertBefore(afterMatch, node);
-                parent.removeChild(node);
-                return true;
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
-            for (const child of Array.from(node.childNodes)) {
-                if (recursivelyHighlightText(child)) {
-                    break;
-                }
+function getElementIncludingText(text) {
+    const all = document.getElementsByTagName("*")
+    let finalEl = null
+
+    for (var i = 0, max = all.length; i < max; i++) {
+        if (all[i].innerText != undefined) {
+            if (all[i].innerText.includes(text)) {
+                finalEl = all[i]
             }
         }
-        return false;
-    };
-
-    recursivelyHighlightText(document.body);
+    }
+    return finalEl
 }
 
 /**
