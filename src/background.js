@@ -5,8 +5,8 @@ import * as storage from "./storage"
 
 let testChecks = [
     {
-        LABEL: "Pending",
-        EXCERPT: "Eurovision “is first and foremost",
+        LABEL: "FALSE",
+        EXCERPT: "Angela Merkel will release her long-awaited memoirs in November under the title Freedom:",
         EXPLANATION: "because you suck",
         SOURCES: [{
             type: "ARTICLE",
@@ -17,7 +17,7 @@ let testChecks = [
     },
     {
         LABEL: "TRUE",
-        EXCERPT: "Agada bagada tagada",
+        EXCERPT: "Leading up to Cohen's testimony, Mr Trump and his ex-attorney traded fiery insults on social media",
         EXPLANATION: "because you suck",
         SOURCES: []
     },
@@ -29,52 +29,10 @@ let testChecks = [
     }
 ]
 
-/**
- * Checks if the `autoDetect` and `highlightEnabled` keys have been set. 
- * 
- * If it has not been, then the keys are initialised.
- */
-function initialiseStorage() {
-    chrome.storage.local.get(["autoDetect"]).then((v) => {
-        if (v.autoDetect == undefined) {
-            console.log("Keys were not initialised");
-            chrome.storage.local.set({ autoDetect: true }).then(() => {
-                chrome.storage.local.set({ highlightEnabled: true });
-            })
-        } else console.log("Keys were indeed initialised");
-    })
-}
-
-function handleStorageGetItems(sendResponse) {
-    console.log("handleStorageGetItems")
-    chrome.storage.local.get("autoDetect").then((v1) => {
-        chrome.storage.local.get("highlightEnabled").then((v2) => {
-            console.log("states from background", v1.autoDetect, v2.highlightEnabled);
-            sendResponse({
-                stateAutoDetect: v1.autoDetect,
-                stateHighlightEnabled: v2.highlightEnabled
-            });
-        })
-    })
-}
-
-function getToggleStateAutoDetect() {
-    return chrome.storage.local.get("autoDetect");
-}
-
-function handleStorageSetAutoDetect(nv) {
-    console.log("handleStorageSetAutoDetect");
-    chrome.storage.local.set({ autoDetect: nv });
-}
-
-function handleStorageSetHighlightEnabled(nv) {
-    console.log("handleStorageSetHighlightEnabled");
-    chrome.storage.local.set({ highlightEnabled: nv });
-}
-
 
 function handleFactCheckArticle(sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        /* Check if possible to even run article autodetect */
         let toggleState = await storage.getStateAutoDetect();
         if (toggleState.autoDetect == false) {
             sendResponse({ error: "Auto detect articles is disabled" });
@@ -92,22 +50,26 @@ function handleFactCheckArticle(sendResponse) {
             return;
         }
 
+        const htmlReq = await fetch(tabs[0].url);
+        const html = await htmlReq.text();
+
+
+        // /* Run cache check */
         // let cacheCheck = await storage.returnCachedResult(tabs[0].url);
-        // console.log("cacheCheck", cacheCheck)
         // if (cacheCheck.found === true) {
-        //     console.log("found");
+        //     console.log("Background.js: Website was found in the cache.")
         //     sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult });
         //     return;
         // }
         
+        /* If website does not exist in cache */
         await setTimeoutAsync(1000);
 
         try {
-            const htmlReq = await fetch(tabs[0].url);
-            const html = await htmlReq.text();
             // const checks = await gateway.fetchArticleClaimText(
             //     html, tabs[0].title, tabs[0].url
             // )
+            console.log("Backgroud.js: Website was not found, trying to run fact checking")
             const checks = testChecks;
             await storage.addToWebsiteCache(checks, tabs[0].url);
             sendResponse({ html, url: tabs[0].url, checks });
@@ -132,9 +94,9 @@ function handleFactCheckSingleClaim(claim, sendResponse) {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "get-items") handleStorageGetItems(sendResponse)
-    else if (request.action === "set-auto-detect") handleStorageSetAutoDetect(request.value)
-    else if (request.action === "set-highlight-enabled") handleStorageSetHighlightEnabled(request.value)
+    if (request.action === "get-items") storage.getItems(sendResponse)
+    else if (request.action === "set-auto-detect") storage.setStateAutoDetect(request.value)
+    else if (request.action === "set-highlight-enabled") storage.setHighlightEnabled(request.value)
     else if (request.action === "fact-check-article") handleFactCheckArticle(sendResponse)
     else if (request.action === "fact-check-single-claim") handleFactCheckSingleClaim(request.value, sendResponse)
     return true

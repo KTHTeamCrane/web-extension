@@ -1,17 +1,16 @@
 export async function returnCachedResult(url) {
     let cache = await getWebsiteCache()
+    console.log("cache from returnCachedResult  ", cache)
     console.log("searching cache", cache)
-    for (let each_cache in cache) {
-        console.log(each_cache.url, url, each_cache.url === url)
-        if (each_cache.url === url) {
-            console.log("found")
+    for (let i = 0; i < cache.length; i++) {
+        if (cache[i].url == url) {
+            console.log("found", cache[i].cachedResult)
             return {
                 found: true,
-                cachedResult: each_cache.cachedResult
+                cachedResult: cache[i].cachedResult
             }
         }
     }
-    console.log("found none")
     return {
         found: false
     }
