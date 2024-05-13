@@ -18,6 +18,22 @@
 .ltms-highlighted-pending {
     background-color: rgb(208, 208, 208);
 }
+    
+.ltms-header-true {
+    color: rgb(34, 200, 145);
+}
+
+.ltms-header-false {
+    color: red;
+}
+
+.ltms-header-partially-true {
+    color: rgb(224, 164, 24);
+}
+
+.ltms-news-pending {
+    color: black;
+}
 
 .ltms-highlighted-text:hover+.ltms-tt-wrapper {
     opacity: 1;
@@ -37,7 +53,6 @@
     padding: 8px 16px 5px 16px;
     font-size: 12px;
     letter-spacing: -0.025em;
-    color: red;
 }
 
 .ltm-tt-reason {

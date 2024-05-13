@@ -21,8 +21,8 @@ let testChecks = [
         SOURCES: []
     },
     {
-        LABEL: "FALSE",
-        EXCERPT: "Earlier, the FBI said it was looking into the case and was in touch with international partners.",
+        LABEL: "PARTIALLY TRUE",
+        EXCERPT: "Kyiv has cast doubt on that account, with one official sug",
         EXPLANATION: "because you suck",
         SOURCES: []
     }

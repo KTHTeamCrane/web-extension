@@ -1,10 +1,11 @@
 import * as tooltip from "./tooltip";
 
 /**
+ * Returns the appropriate CSS class that applies highlighting to a text.
  * @param {"TRUE" | "PARTIALLY TRUE" | "FALSE"} label
  * @returns {string}
  */
-export function labelToClass(label) {
+function labelToClass(label) {
     switch (label) {
         case "TRUE":
             return "ltms-highlighted-true";

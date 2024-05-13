@@ -1,6 +1,24 @@
 import tippy from "tippy.js"
 
 /**
+ * Returns the appropriate CSS class that changes colour on the LitmusNews text on the tooltip
+ * @param {"TRUE" | "PARTIALLY TRUE" | "FALSE"} label
+ * @returns {string}
+ */
+export function labelToClass(label) {
+    switch (label) {
+        case "TRUE":
+            return "ltms-header-true";
+        case "PARTIALLY TRUE":
+            return "ltms-header-partially-true";
+        case "FALSE":
+            return "ltms-header-false";
+        case "Pending":
+            return "ltms-header-pending";
+    }
+}
+
+/**
  * @param {HTMLElement} parent
  * @param {{
 *  LABEL: string,
@@ -50,6 +68,7 @@ export function addTooltip(parent, data) {
     // Add CSS classes
     bg.classList.add("ltms-tt-bg")
     header.classList.add("ltms-tt-header")
+    header.classList.add(labelToClass(data.LABEL))
     reason.classList.add("ltm-tt-reason")
     sourceLabel.classList.add("ltm-tt-src_lbl")
     sourceList.classList.add("ltm-tt-src_list")
