@@ -65,6 +65,7 @@ document.onkeydown = () => {
 document.onmouseup = async () => {
     if (highlightShortcutEnabled) {
         let selectedText = document.getSelection().toString()
+        if (selectedText == "") return
         const pendingClaims = convertClaimToCheckObject(selectedText)
         const tippy = highlighting.highlightCheck(pendingClaims)
         console.log("tippy", tippy)

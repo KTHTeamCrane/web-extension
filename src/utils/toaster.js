@@ -7,11 +7,11 @@ export const finishedProcessingToast = (cached) => {
     const fetchedFromCacheMsg = "We have preserved the cached results for this article and reapplied them, with hoverable sections offering detailed explanations."
     const fetchedFromServerMsg = "We've completed fact-checking the article, highlighting key points. Hover over these sections for explanations on our markings."
     
-    return makeToast(cached ? fetchedFromCacheMsg : fetchedFromServerMsg, 1000, "#a4ff9c")
+    return makeToast(cached ? fetchedFromCacheMsg : fetchedFromServerMsg, 10000, "#a4ff9c")
 }
 
 export const errorToast = (errorMsg) => {
-    return makeToast(errorMsg, 4000, "#ff8080")
+    return makeToast(errorMsg, 10000, "#ff8080")
 }
 
 function makeToast(msg, duration, colour="white") {

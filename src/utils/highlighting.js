@@ -35,6 +35,7 @@ function labelToClass(label) {
 * }} check 
  */
 export function highlightCheck(check, tippy) {
+    check.EXCERPT = check.EXCERPT.trim().replace(/^s+|\s+$/g, '')
     // Get all elements in the webpage
     let parent = getParagraphThatIncludes(check.EXCERPT)
 
