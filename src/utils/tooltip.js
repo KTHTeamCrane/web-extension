@@ -80,7 +80,7 @@ export function addTooltip(parent, data) {
     bg.appendChild(sourceLabel)
     bg.appendChild(sourceList)
 
-    parent.appendChild(bg)
+    // parent.appendChild(bg)
 
     function onTippyMount(instance) {
         document.getElementById(`tippy-${instance.id}`).classList.add("inline")
@@ -88,7 +88,10 @@ export function addTooltip(parent, data) {
 
     tippy(parent, {
         content: bg,
-        interactive: true
+        interactive: true,
+        trigger: 'click',
+        delay: [100, -100],
+        animation: 'fade'
     })
 }
 
@@ -140,7 +143,8 @@ export function addPendingTooltip(parent) {
 
     tippy(parent, {
         content: bg,
-        interactive: true
+        interactive: true,
+        trigger: 'click'
     })
 }
 

@@ -18,6 +18,14 @@
 .ltms-highlighted-pending {
     background-color: rgb(208, 208, 208);
 }
+
+
+.ltms-highlighted-true,
+.ltms-highlighted-false,
+.ltms-highlighted-partially-true, 
+.ltms-highlighted-pending {
+    cursor: pointer;
+}
     
 .ltms-header-true {
     color: rgb(34, 200, 145);

@@ -6,7 +6,7 @@ import * as storage from "./utils/storage"
 let testChecks = [
     {
         LABEL: "FALSE",
-        EXCERPT: "Mr Trump's former lawyer Michael Cohen said he spoke to him immediately after wiring the $130,000 (£104,000) payment to adult-film actress Stormy Daniels.",
+        EXCERPT: "The only thing that was on my mind was to accomplish the task, to make him [Trump] happy,\" Cohen told the court on Monday",
         EXPLANATION: "because you suck",
         SOURCES: [{
             type: "ARTICLE",
@@ -23,7 +23,7 @@ let testChecks = [
     },
     {
         LABEL: "PARTIALLY TRUE",
-        EXCERPT: "The flag furore is the latest controversy to hit this year’s competition in Malmӧ,",
+        EXCERPT: "Mr Trump has pleaded not guilty to charges of falsifying business records, relating to a hush-money payment Cohen, his former lawyer and fixer",
         EXPLANATION: "because you suck",
         SOURCES: []
     }
@@ -58,22 +58,22 @@ function handleFactCheckArticle(    sendResponse) {
         const html = await htmlReq.text();
 
 
-        // /* Run cache check */
-        let cacheCheck = await storage.returnCachedResult(tabs[0].url);
-        if (cacheCheck.found === true) {
-            console.log("Background.js: Website was found in the cache.")
-            sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult, cached: true });
-            return; 
-        }
+        // // /* Run cache check */
+        // let cacheCheck = await storage.returnCachedResult(tabs[0].url);
+        // if (cacheCheck.found === true) {
+        //     console.log("Background.js: Website was found in the cache.")
+        //     sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult, cached: true });
+        //     return; 
+        // }
         
         /* If website does not exist in cache */
         await setTimeoutAsync(1000);
 
         try {
-            const checks = await gateway.fetchArticleClaimText(
-                html, tabs[0].title, tabs[0].url
-            )
-            // const checks = testChecks;
+            // const checks = await gateway.fetchArticleClaimText(
+            //     html, tabs[0].title, tabs[0].url
+            // )
+            const checks = testChecks;
             await storage.addToWebsiteCache(checks, tabs[0].url);
             sendResponse({ html, url: tabs[0].url, checks, cached: false });
         } catch (error) {
