@@ -1,12 +1,12 @@
 import * as gateway from "./utils/gateway";
 import { loadWhitelist, isURLNewsSource, setTimeoutAsync } from "./utils/util";
-import * as storage from "./storage"
+import * as storage from "./utils/storage"
 
 
 let testChecks = [
     {
         LABEL: "FALSE",
-        EXCERPT: "Angela Merkel will release her long-awaited memoirs in November under the title Freedom:",
+        EXCERPT: "Mr Trump's former lawyer Michael Cohen said he spoke to him immediately after wiring the $130,000 (£104,000) payment to adult-film actress Stormy Daniels.",
         EXPLANATION: "because you suck",
         SOURCES: [{
             type: "ARTICLE",
@@ -30,7 +30,7 @@ let testChecks = [
 ]
 
 
-function handleFactCheckArticle(sendResponse) {
+function handleFactCheckArticle(    sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         /* Check if possible to even run article autodetect */
         let toggleState = await storage.getStateAutoDetect();
@@ -46,33 +46,36 @@ function handleFactCheckArticle(sendResponse) {
 
         await loadWhitelist();
         if (!isURLNewsSource(tabs[0].url)) {
-            sendResponse({ error: "URL not in whitelist" });
+            sendResponse({ isWebpageArticle: false });
             return;
         }
+
+        chrome.tabs.sendMessage(tabs[0].id, {
+            isWebpageArticle: true
+        })
 
         const htmlReq = await fetch(tabs[0].url);
         const html = await htmlReq.text();
 
 
         // /* Run cache check */
-        // let cacheCheck = await storage.returnCachedResult(tabs[0].url);
-        // if (cacheCheck.found === true) {
-        //     console.log("Background.js: Website was found in the cache.")
-        //     sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult });
-        //     return;
-        // }
+        let cacheCheck = await storage.returnCachedResult(tabs[0].url);
+        if (cacheCheck.found === true) {
+            console.log("Background.js: Website was found in the cache.")
+            sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult, cached: true });
+            return; 
+        }
         
         /* If website does not exist in cache */
         await setTimeoutAsync(1000);
 
         try {
-            // const checks = await gateway.fetchArticleClaimText(
-            //     html, tabs[0].title, tabs[0].url
-            // )
-            console.log("Backgroud.js: Website was not found, trying to run fact checking")
-            const checks = testChecks;
+            const checks = await gateway.fetchArticleClaimText(
+                html, tabs[0].title, tabs[0].url
+            )
+            // const checks = testChecks;
             await storage.addToWebsiteCache(checks, tabs[0].url);
-            sendResponse({ html, url: tabs[0].url, checks });
+            sendResponse({ html, url: tabs[0].url, checks, cached: false });
         } catch (error) {
             sendResponse({ error: error.message });
         }
@@ -81,7 +84,6 @@ function handleFactCheckArticle(sendResponse) {
 }
 
 function handleFactCheckSingleClaim(claim, sendResponse) {
-    console.log("Handle Fact Check", claim)
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         try {
             const checks = await gateway.testFetchSingleClaimCheck(claim)

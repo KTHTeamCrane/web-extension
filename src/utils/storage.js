@@ -82,10 +82,8 @@ export function initialiseStorage() {
  * @param sendResponse to send response to the content script
  */
 export function getItems(sendResponse) {
-    console.log("handleStorageGetItems")
     chrome.storage.local.get("autoDetect").then((v1) => {
         chrome.storage.local.get("highlightEnabled").then((v2) => {
-            console.log("states from background", v1.autoDetect, v2.highlightEnabled)
             sendResponse({
                 stateAutoDetect: v1.autoDetect,
                 stateHighlightEnabled: v2.highlightEnabled
@@ -99,6 +97,5 @@ export function getStateAutoDetect() {
 }
 
 export function setStateAutoDetect(nv) {
-    console.log("handleStorageSetAutoDetect")
     chrome.storage.local.set({ autoDetect: nv })
 }

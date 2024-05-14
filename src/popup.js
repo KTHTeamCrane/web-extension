@@ -21,7 +21,6 @@ const toggleHighlight = document.getElementById("toggle-enable-highlight")
 // }
 
 chrome.runtime.sendMessage( { action: "get-items" }, async (msgResponse) => {
-    console.log("Received message from background", msgResponse)
     toggleAutoDetect.checked = msgResponse.stateAutoDetect
     toggleHighlight.checked = msgResponse.stateHighlightEnabled
 })

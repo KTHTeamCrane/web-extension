@@ -26,40 +26,39 @@ let highlightShortcutEnabled = false
  * `background.js` returns the HTML of the current page.
  * 
  * `background.js` also talks with `api-gateway` to retrieve "fact-checked" claims as well.
- * 
  */
 function sendMessageToBackground() {
+    console.log("Sending message to background, waiting for response")
     chrome.runtime.sendMessage({ action: "fact-check-article" }, async (msgResponse) => {
-        toaster.processingToast.showToast()
-        if (!msgResponse.error) {
-            highlighting.applyPageHighlights(msgResponse.checks)
+        if (msgResponse.error) {
+            console.log("Background encountered error", msgResponse.error)
+            toaster.errorToast(msgResponse.error).showToast()
+            return
         }
-        else console.log(msgResponse.error)
+
+        console.log("Received response from background fine")
         toaster.processingToast.hideToast()
-        toaster.finishedProcessingToast.showToast()
+        toaster.finishedProcessingToast(msgResponse.cached).showToast()
+        console.log(msgResponse.checks)
+        highlighting.applyPageHighlights(msgResponse.checks)
     })
 }
 
 // Checks if the document is in loading state, in which case adds a listener to run when DOMContent is loaded
 if (document.readyState !== 'loading') {
-    console.log("DOM already loaded")
     sendMessageToBackground()
 } else {
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("Still loading DOM")
         sendMessageToBackground()
     });
 }
 
 document.onkeydown = () => {
-    console.log("Sending message to background script to get items")
     chrome.runtime.sendMessage({ action: "get-items" }, (msgResponse) => {
-        console.log(msgResponse)
         if (msgResponse.stateHighlightEnabled) {
             if (highlightShortcutEnabled) highlightShortcutEnabled = false
             else highlightShortcutEnabled = true
         }
-        console.log("Highlighting enabled: ", highlightShortcutEnabled)
     })
 }
 
@@ -70,10 +69,8 @@ document.onmouseup = async () => {
         highlighting.highlightCheck(pendingClaims)
         chrome.runtime.sendMessage({ action: "fact-check-single-claim", value: selectedText }, async (msgResponse) => {
             if (msgResponse.error != undefined) {
-                console.log("Encountered error", msgResponse.error)
                 return
             }
-            console.log(msgResponse.checks)
             highlighting.highlightCheck(msgResponse.checks)
         })
     }
@@ -81,7 +78,10 @@ document.onmouseup = async () => {
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        highlightToggleEnabled = request.highlightEnabled
-        console.log("Highlighting enabled from popup", highlightToggleEnabled)
+        if (request.highlightEnabled) {
+            highlightToggleEnabled = request.highlightEnabled
+        } else if (request.isWebpageArticle) {
+            toaster.processingToast.showToast()
+        }
     }
 );

@@ -144,6 +144,7 @@ function getElementThatIncludes(text) {
 * }[]} claims 
  */
 export function applyPageHighlights(claims) {
+    console.log("Applying highighting")
     claims.forEach((each_e) => {
         highlightCheck(each_e)
     })
