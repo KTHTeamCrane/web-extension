@@ -4,12 +4,14 @@ const API_URL = "https://api-gateway-slixmjmf2a-ez.a.run.app";
 // const API_URL = "http://localhost:8000";
 
 export async function fetchSingleClaimCheck(claim) {
-    const body = { article: claim }
+    const body = { text: claim }
     const checkReq = await fetch(`${API_URL}/api/article/fact-check-text`, {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(body)
     })
+
+    console.log("checkReq", checkReq.status, checkReq.statusText)
 
     if (checkReq.status !== 200) {
         throw checkReq.statusText

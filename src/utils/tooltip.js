@@ -45,7 +45,10 @@ export function addTooltip(parent, data) {
     reason.innerHTML = data.EXPLANATION
 
     const sourceLabel = document.createElement("div")
-    sourceLabel.innerHTML = "Sources"
+    
+    if (data.SOURCES.length > 0) {
+        sourceLabel.innerHTML = "Sources"
+    }
 
     const sourceList = document.createElement("div")
 

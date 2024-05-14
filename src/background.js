@@ -86,7 +86,7 @@ function handleFactCheckArticle(    sendResponse) {
 function handleFactCheckSingleClaim(claim, sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         try {
-            const checks = await gateway.testFetchSingleClaimCheck(claim)
+            const checks = await gateway.fetchSingleClaimCheck(claim)
             sendResponse({ checks: checks })
         } catch (error) {
             sendResponse({ error: error.message })
