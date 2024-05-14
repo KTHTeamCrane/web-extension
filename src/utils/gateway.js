@@ -19,10 +19,10 @@ export async function fetchSingleClaimCheck(claim) {
 }
 
 export async function testFetchSingleClaimCheck(claim) {
-    await setTimeoutAsync(40)
+    await setTimeoutAsync(4000)
     return {
         EXCERPT: claim,
-        LABEL: "false",
+        LABEL: "FALSE",
         EXPLANATION: "This claim has been determined to be false because the code is depressed.",
         SOURCES: ["Mark Henry said so"]
     }

@@ -66,12 +66,13 @@ document.onmouseup = async () => {
     if (highlightShortcutEnabled) {
         let selectedText = document.getSelection().toString()
         const pendingClaims = convertClaimToCheckObject(selectedText)
-        highlighting.highlightCheck(pendingClaims)
+        const tippy = highlighting.highlightCheck(pendingClaims)
+        console.log("tippy", tippy)
         chrome.runtime.sendMessage({ action: "fact-check-single-claim", value: selectedText }, async (msgResponse) => {
             if (msgResponse.error != undefined) {
                 return
             }
-            highlighting.highlightCheck(msgResponse.checks)
+            highlighting.highlightCheck(msgResponse.checks, tippy)
         })
     }
 }

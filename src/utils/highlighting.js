@@ -34,15 +34,17 @@ function labelToClass(label) {
 *      url?: string}[]
 * }} check 
  */
-export function highlightCheck(check) {
+export function highlightCheck(check, tippy) {
     // Get all elements in the webpage
-    const parent = getElementThatIncludes(check.EXCERPT)
+    let parent = getParagraphThatIncludes(check.EXCERPT)
 
-    const main = document.body
-    console.log("main", check.EXCERPT, main.innerText.includes(check.EXCERPT, 0))
     if (parent == null) {
-        console.log("No element found with matching text")
+        console.error("Could not highlight since no element found with matching text")
         return
+    }
+
+    if (tippy) {
+        tippy.destroy()
     }
 
     const textContent = parent.textContent
@@ -52,12 +54,12 @@ export function highlightCheck(check) {
     let matchText = textContent.substring(matchIndex, matchIndex + check.EXCERPT.length);
     const textAfter = textContent.substring(matchIndex + check.EXCERPT.length);
 
-
     const spanBefore = copyHTMLTextRange(parent, textBefore)
     const spanMatching = copyHTMLTextRange(parent, matchText)
     const spanAfter = copyHTMLTextRange(parent, textAfter)
 
     spanMatching.classList.add(labelToClass(check.LABEL))
+    parent.classList.add("ltms-pin")
 
     parent.innerHTML = ""
     parent.appendChild(spanBefore)
@@ -65,12 +67,12 @@ export function highlightCheck(check) {
     parent.appendChild(spanAfter)
 
     if (check.LABEL == "Pending") {
-        tooltip.addPendingTooltip(spanMatching, check)
+        return tooltip.addPendingTooltip(spanMatching, check)
     } else {
-        tooltip.addTooltip(spanMatching, check)
+        return tooltip.addTooltip(spanMatching, check)
     }
-
 }
+
 
 /**
  * Takes in a parent HTMLElement and a matchingText.
@@ -87,13 +89,15 @@ function copyHTMLTextRange(parent, matchingText) {
     let matchText = matchingText
     if (parent.children[0]) {
         for (let i = 0; i < parent.children.length; i++) {
-            const each_child = parent.children[i]
+            let each_child = parent.children[i]
+            removeAllLTMSClasses(each_child)
             if (matchText.includes(each_child.innerText)) {
                 const beforeChild = document.createElement("span")
 
                 const split = matchText.split(each_child.innerText)
-
-                beforeChild.innerText = split[0]
+                if (split[0]) {
+                    beforeChild.innerText 
+                }
 
                 span.appendChild(beforeChild)
                 span.appendChild(each_child)
@@ -110,9 +114,27 @@ function copyHTMLTextRange(parent, matchingText) {
     return span
 }
 
+/**
+ * Removes all highlighting related CSS classes from a node,
+ * 
+ * This is needed for pending highlights.
+ * @param {HTMLElement} node 
+ */
+function removeAllLTMSClasses(node) {
+    node.classList.remove("ltms-highlighted-true")
+    node.classList.remove("ltms-highlighted-pending")
+    node.classList.remove("ltms-highlighted-false")
+    node.classList.remove("ltms-highlighted-partially-true")
+}
 
 
-function getElementThatIncludes(text) {
+/**
+ * Returns the paragraph <p> who's innerText matches the provided text.
+ * 
+ * @param {string} text 
+ * @returns HTMLElement | null
+ */
+function getParagraphThatIncludes(text) {
     const all = document.getElementsByTagName("p")
     let finalEl = null
 
