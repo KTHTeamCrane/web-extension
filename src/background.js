@@ -30,7 +30,7 @@ let testChecks = [
 ]
 
 
-function handleFactCheckArticle(    sendResponse) {
+function handleFactCheckArticle(sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         /* Check if possible to even run article autodetect */
         let toggleState = await storage.getStateAutoDetect();
@@ -59,21 +59,21 @@ function handleFactCheckArticle(    sendResponse) {
 
 
         // // /* Run cache check */
-        // let cacheCheck = await storage.returnCachedResult(tabs[0].url);
-        // if (cacheCheck.found === true) {
-        //     console.log("Background.js: Website was found in the cache.")
-        //     sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult, cached: true });
-        //     return; 
-        // }
-        
+        let cacheCheck = await storage.returnCachedResult(tabs[0].url);
+        if (cacheCheck.found === true) {
+            console.log("Background.js: Website was found in the cache.")
+            sendResponse({ html, url: tabs[0].url, checks: cacheCheck.cachedResult, cached: true });
+            return;
+        }
+
         /* If website does not exist in cache */
         await setTimeoutAsync(1000);
 
         try {
-            // const checks = await gateway.fetchArticleClaimText(
-            //     html, tabs[0].title, tabs[0].url
-            // )
-            const checks = testChecks;
+            const checks = await gateway.fetchArticleClaimText(
+                html, tabs[0].title, tabs[0].url
+            )
+            // const checks = testChecks;
             await storage.addToWebsiteCache(checks, tabs[0].url);
             sendResponse({ html, url: tabs[0].url, checks, cached: false });
         } catch (error) {

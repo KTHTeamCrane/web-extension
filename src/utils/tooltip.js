@@ -45,7 +45,7 @@ export function addTooltip(parent, data) {
     reason.innerHTML = data.EXPLANATION
 
     const sourceLabel = document.createElement("div")
-    
+
     if (data.SOURCES.length > 0) {
         sourceLabel.innerHTML = "Sources"
     }
@@ -62,6 +62,7 @@ export function addTooltip(parent, data) {
             el = document.createElement("a")
             el.innerHTML = each_source.source_publisher
             el.href = each_source.url
+            el.target = "_blank"
         }
 
         el.classList.add("ltms-tt-src_item")
