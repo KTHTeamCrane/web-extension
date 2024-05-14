@@ -1,3 +1,7 @@
+/**
+ * Checks the cache if the URL exists in cache, then returns cached results if they exist.
+ * @param {string} url 
+ */
 export async function returnCachedResult(url) {
     let cache = await getWebsiteCache()
     console.log("cache from returnCachedResult  ", cache)
@@ -16,24 +20,31 @@ export async function returnCachedResult(url) {
     }
 }
 
+/**
+ * 
+ * @returns All website caches from local storage.
+ */
 export async function getWebsiteCache() {
-    console.log("Getting storage cache")
     const storageOutput = await chrome.storage.local.get(["websiteCache"])
     const websiteCache = await storageOutput.websiteCache
-    console.log("Loaded data from cache", storageOutput)
     return websiteCache
 }
 
+/**
+ * 
+ * @param {} nv 
+ * @param {string} url 
+ */
 export async function addToWebsiteCache(nv, url) {
-    console.log("Setting new value on the url")
     const currentCache = await getWebsiteCache()
     const newItem = { url, cachedResult: nv }
-    console.log("Current cache", currentCache)
     currentCache.push(newItem)
-    console.log("Adding to website", currentCache)
     chrome.storage.local.set( { websiteCache: currentCache })
 }
 
+/**
+ * @param {boolean} nv 
+ */
 export function setHighlightEnabled(nv) {
     chrome.storage.local.set({ highlightEnabled: nv })
 }
@@ -43,6 +54,8 @@ export function setHighlightEnabled(nv) {
  * Checks if the `autoDetect` and `highlightEnabled` keys have been set. 
  * 
  * If it has not been, then the keys are initialised.
+ * 
+ * Also checks if caching is initialised, and does initialisation if it hasn't been done so.
  */
 export function initialiseStorage() {
     chrome.storage.local.get(["autoDetect"]).then((v) => {
@@ -65,6 +78,9 @@ export function initialiseStorage() {
 }
 
 
+/**
+ * @param sendResponse to send response to the content script
+ */
 export function getItems(sendResponse) {
     console.log("handleStorageGetItems")
     chrome.storage.local.get("autoDetect").then((v1) => {
